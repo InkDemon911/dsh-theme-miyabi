@@ -1,0 +1,11 @@
+# ui-skin-miyabi bundle patch：向 profile 注入一行客户端主题插件。
+#
+# 客户端模块扫描（dsh-client-modules）会读取本包的 package.json 里的 dsh.client
+# 声明，把 exports["./client"] 指向的 client.js 作为浏览器 bundle 提供；
+# `platform: web` + `immediately: true` 让它在启动阶段就被预取，主题尽早生效。
+#
+# 宿主半侧 index.js 是空 apply —— 存在的意义只是让 loader 能挂载这一行
+# （没有 fiber 的行会让 boot 扫描失败），主题的全部实现都在浏览器端。
+- insert:
+    - id: ui-skin-miyabi
+      name: '@local/ui-skin-miyabi'

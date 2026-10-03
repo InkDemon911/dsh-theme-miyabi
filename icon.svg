@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="霜月雅刃 · 星见雅">
+  <title>霜月雅刃 · 星见雅</title>
+  <desc>原创图形：斜切色块底 + 霜月（含狐耳） + 一道斩击 + 一点猩红。</desc>
+  <defs>
+    <clipPath id="symFrame">
+      <rect x="1" y="1" width="62" height="62" rx="15" />
+    </clipPath>
+    <linearGradient id="symBlade" x1="6" y1="58" x2="58" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f6ea6" />
+      <stop offset="0.55" stop-color="#8fd9ff" />
+      <stop offset="1" stop-color="#f2faff" />
+    </linearGradient>
+  </defs>
+
+  <!-- 底：近黑冷紫 + 冷色描边 -->
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#07070f" />
+
+  <g clip-path="url(#symFrame)">
+    <!-- 斜切色块：新艾利都的硬边分区语言 -->
+    <path d="M0 45 L64 21 L64 64 L0 64 Z" fill="#101a2e" />
+    <path d="M0 45 L64 21 L64 27.4 L0 51.4 Z" fill="#8fd9ff" fill-opacity="0.20" />
+    <path d="M0 33.4 L64 9.4 L64 10.2 L0 34.2 Z" fill="#e6c479" fill-opacity="0.55" />
+
+    <!-- 霜月：满月一点，狐耳两枚 -->
+    <circle cx="41" cy="24" r="12.4" fill="#dceeff" fill-opacity="0.94" />
+    <path d="M31.6 15.2 L34.4 6.4 L40 13.2 Z" fill="#07070f" />
+    <path d="M44.6 12.8 L51.4 6.2 L52 14.4 Z" fill="#07070f" />
+    <circle cx="40.4" cy="24" r="12.4" fill="#07070f" fill-opacity="0.30" />
+    <circle cx="41" cy="24" r="12.4" fill="none" stroke="#0a1220" stroke-opacity="0.5" stroke-width="1" />
+
+    <!-- 斩击：一道由暗到亮的刀锋 -->
+    <path d="M6.5 58.5 L50.5 12.5 L55 12.5 L11 58.5 Z" fill="url(#symBlade)" />
+    <path d="M6.5 58.5 L50.5 12.5 L51.6 12.5 L7.6 58.5 Z" fill="#ffffff" fill-opacity="0.85" />
+    <path d="M8.6 60.6 L52.6 14.6 L53.4 14.6 L9.4 60.6 Z" fill="#8fd9ff" fill-opacity="0.45" />
+
+    <!-- 一点猩红：眼瞳 -->
+    <circle cx="47.4" cy="31.4" r="1.7" fill="#ff5f70" />
+  </g>
+
+  <rect x="1.25" y="1.25" width="61.5" height="61.5" rx="14.75" fill="none"
+        stroke="#8fd9ff" stroke-opacity="0.38" stroke-width="1.5" />
+</svg>

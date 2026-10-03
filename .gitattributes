@@ -1,0 +1,17 @@
+# 统一换行，避免 Windows / macOS / Linux 之间来回 diff
+* text=auto eol=lf
+
+# 二进制素材：不要让 git 做任何换行或 diff 处理
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.gif binary
+*.woff2 binary
+
+# 构建产物是文本，但**不参与语言统计**（它由 src/ 生成，逐行统计会把数字灌水）
+client.js linguist-generated=true -diff
+
+# 锁文件与文档
+pnpm-lock.yaml -diff
+CHANGELOG.md merge=union

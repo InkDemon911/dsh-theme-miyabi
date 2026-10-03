@@ -1,0 +1,408 @@
+# dsh-theme-miyabi · 霜月雅刃
+
+> 《绝区零》星见雅（Hoshimi Miyabi）主题的 **DeepSeek Harness Web UI** 皮肤插件。
+> 霜蓝冷调令牌层 × 新艾利都街头复古未来的 CRT 身份层，配一套可调的氛围挂件。
+
+[![check](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml/badge.svg)](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![self-check: 135 assertions](https://img.shields.io/badge/self--check-135%20assertions-brightgreen.svg)](tools/check.mjs)
+
+```
+  霜 ── 霜蓝 × 冷紫 × 金线      唯一模式
+```
+
+| | |
+|---|---|
+| 包名 | `@local/ui-skin-miyabi` |
+| 主题 id / loader 行 id | `ui-skin-miyabi` |
+| 版本 | 3.0.2 |
+| 适配 | DeepSeek Harness 的 Web GUI 与桌面客户端（同一份代码，`dsh.client.platform` 只有 `web` 一个合法取值） |
+
+> **仓库名与包名不一致是有意的**：仓库叫 `dsh-theme-miyabi`，而包名 / 主题 id 保持
+> `ui-skin-miyabi` 不变，这样已有安装（profile 里的 `link:` 与 patch 行）不用动就能升级。
+
+---
+
+## ⚠️ 素材版权（先看这一节）
+
+本仓库**包含米哈游的版权素材**，它们**不在 MIT 许可范围内**：
+
+| 文件 | 内容 | 权利 |
+|---|---|---|
+| `assets/miyabi-wallpaper.jpg` | 星见雅「1 月月历壁纸（PC 版）」，2560×1440 | 版权归 **miHoYo / HoYoverse** |
+| `assets/ref/emblem-source.png` | 霜星徽记位图（AI 增强版），2048×2048 | 同上（派生自官方素材） |
+
+- `miyabi-wallpaper.jpg` 会以 base64 内嵌进构建产物 `client.js`，**所以 `client.js` 里也带着它**。
+- 本仓库按作者授权作为**非商业同人界面皮肤**收录。如果你是权利人并希望移除，请开 issue，会立刻删掉。
+- **想要一个不含版权素材的版本**（推荐分发给别人时用这个）：
+
+  ```bash
+  rm -rf assets/miyabi-wallpaper.jpg assets/ref
+  node tools/build.mjs
+  ```
+
+  清空后 `client.js` 从约 1.4 MB 掉到约 130 KB，立绘层自动隐藏（不报错、不留白框），
+  霜星仍然在 —— 它走的是 `assets/emblem.json` 里的**纯轮廓坐标**，与位图无关。
+  细节见 [`assets/README.md`](assets/README.md)。
+
+代码与自制素材（底纹、噪点、警示条、HUD、月相、刀光、粒子运动）随 [MIT](LICENSE) 分发。
+
+---
+
+## 特性
+
+- **令牌层**：116 个 `--dsw-*` 设计令牌各给浅深两档取值。夜档是「霜月」，宿主机切浅色时
+  自动变成昼档「白霜」，不会串成不可读的配色
+- **身份层**：CRT 扫描线、录像带噪点（`feTurbulence`）、暗角与色散边、信号故障、
+  HUD 四角括号与警示条、斜切网格底纹 —— 全部 `pointer-events: none`
+- **挂件层**（三处纯新增槽位，不动宿主任何东西）：
+  - `shell.overlay`：氛围浮层 + **可拖动的快速控制条**（主题开关、强度、霜点档、真实月相）
+  - `settings.section`：「霜月雅刃」控制页
+  - `settings.general.item`：通用设置里的一行速切
+- **强度 0–100 无级调节**：0 = 只换配色（面板不透明、无氛围），100 = 完整氛围 + 通透面板
+- **界面不透明度 40–100%** 与**立绘不透明度**两个独立旋钮
+- **立绘位置四选一**：无 / 贴左（默认）/ 贴右 / 右侧水印
+- **霜星**（雪花图样）的形状由 [`tools/trace-emblem.mjs`](tools/trace-emblem.mjs)
+  从位图**矢量化**而来（回栅格 IoU 0.9981），路径不含颜色，颜色在渲染时给
+- **无声音**、**无网络请求**、**不收集任何数据**：音效模块已整体移除，
+  所有图形是本地 data URI、无跨域
+- 关闭主题即**完整还原**宿主外观（含把外观偏好还回去）
+
+---
+
+## 安装
+
+需要 DeepSeek Harness（`dsh`）已可用。仓库是插件源码，**不需要构建** ——
+`client.js` 已随仓库提交。
+
+### 1. 拿到源码
+
+```bash
+git clone https://github.com/InkDemon911/dsh-theme-miyabi.git
+```
+
+### 2. 以 link 方式装进某个 profile
+
+```bash
+# <profile> 换成你要用的 profile 名，例如 web、tauri
+dsh plugin --profile <profile> add "link:<clone 下来的绝对路径>"
+```
+
+Windows PowerShell 例子：
+
+```powershell
+dsh plugin --profile web add "link:D:\plugins\dsh-theme-miyabi"
+```
+
+### 3. 确认 bundle 已启用
+
+包声明了 `dsh.bundle.patch`，装好后应当出现在 profile 的 bundle 列表里：
+
+```bash
+dsh --profile <profile> --dump-config
+```
+
+应当能看到：
+
+```yaml
+- id: ui-skin-miyabi
+  name: '@local/ui-skin-miyabi'
+  disabled: false
+```
+
+如果没有，用插件管理器把这一行启用。
+
+### 4. 重启 Harness
+
+> ⚠️ **改 bundle 的启用状态需要重启进程**（startup profile 的语义），刷新页面不够。
+> 之后**只改 `client.js` 内容**才由宿主 HMR 热更新。桌面客户端请整个退出再开。
+
+### 5. 确认装上了
+
+打开 **设置 → 霜月雅刃**，能看到控制页即成功。
+控制条默认在**右下角**，是一枚月相小按钮。
+
+### 卸载
+
+```bash
+dsh plugin --profile <profile> remove @local/ui-skin-miyabi
+```
+
+或者只关主题不卸包：**设置 → 霜月雅刃 → 关闭并还原宿主外观**（幂等，随时开回来）。
+
+---
+
+## 使用
+
+| 位置 | 是什么 |
+|---|---|
+| **设置 → 霜月雅刃** | 控制页：开关、强度、界面不透明度、立绘位置与浓淡、动效与氛围六项、控制条形态、彩蛋、恢复默认 |
+| **设置 → 通用 → 霜月雅刃** | 一行速切开关 |
+| **右下角快速控制条** | 默认「图标」态：月相小按钮，点开变成长条 |
+
+长条上是：`霜 / ·`（开关主题）· `− 78% ＋` 调强度 · 霜星按钮循环霜点档 ·
+月相按钮（点一下放刀光）· `☰` 快速设置弹层 · `—` 收回图标态。
+**按住长条空白处可拖动**，位置记进配置，窗口缩小后自动夹回可视区。
+
+### 可访问性
+
+- `ESC` 收起快速设置弹层
+- 所有控件都是真 `<button>` / `<input type="range">`：开关 `role="switch" aria-checked`，
+  分段控件 `aria-pressed`，滑杆吃原生键盘行为，焦点环走 `--dsw-focus-ring-color`
+- 系统开启「减少动态效果」时动效一律按关闭处理，**霜点与故障层直接不渲染**（不是靠 CSS 藏）
+- 正文对比度实测：正文/强调文字最差 **5.39:1**，次级文字最差 **3.48:1**，
+  填色按钮文字 6.69–18.51:1，代码高亮最差 4.84:1
+- **没有替换系统光标**：只改焦点环与选区色（自定义光标需要位图，且在文本/拖拽场景伤可用性）
+
+### 彩蛋（可关）
+
+- 发送消息时一道斜向刀光（260ms，只动 `transform`/`opacity`；动效关闭时不出现）
+- 在输入框里只输入 `miyabi` / `shimotsuki` / `霜月` / `虚狩` / `星见雅` 再回车
+  → 刀光 + 一行「虚狩 · 出雲」浮字
+- 面板上的月相是**真实月相**（按平均朔望月从 2000-01-06 18:14 UTC 那次朔推算），
+  受光形状用半短轴为 `R·|cos 2πp|` 的椭圆画出来，朔/望/上下弦都退化成正确形状
+
+---
+
+## 配置项
+
+全部配置存在浏览器 `localStorage`，键 `ui-skin-miyabi:cfg:v2`（一份 JSON）。
+**不收集、不上传任何数据**，也不使用 IndexedDB。
+
+> 为什么不用宿主设置文档：第三方令牌层没有写入宿主 settings 的通道
+> （`ctx.theme.setTheme()` 只持久化内建偏好 `light/dark/system`），
+> 所以皮肤自己持有状态 —— 这也是生态里其它主题插件的通行做法。
+
+| 键 | 取值 | 默认 | 说明 |
+|---|---|---|---|
+| `cfgRev` | 整数 | `3` | 设计基线版本。基线字段升版时自动拉回新默认，用户偏好不动 |
+| `enabled` | bool | `true` | 总开关。关闭 = 摘掉 `data-miyabi-skin`、撤样式表、卸令牌层、把外观偏好还给宿主 |
+| `intensity` | 0–100 | `78` | **0 = 只换配色**（面板不透明、无氛围）；**100 = 完整氛围 + 通透面板**。一个变量驱动全部效果层与面板 alpha |
+| `panelOpacity` | 40–100 | `100` | **界面不透明度**。100% = 设计值（壁纸与立绘明显透出）；调低则面板更透 |
+| `art` | `none` `left` `right` `watermark` | `left` | 立绘位置。贴左／贴右按高度贴合并坐在底边，水印是右侧竖直居中；横向超出由窗口裁掉。`none` 只关立绘、不关主题 |
+| `artOpacity` | 4–100 | `42` | 立绘浓度（昼档内部再乘 0.5，防止照片压穿浅底文字） |
+| `motion` | `full` `lite` `off` | `full` | 完整（含滚动亮带与故障闪烁）/ 轻微（霜点静止）/ 关闭。系统 `prefers-reduced-motion` 命中时强制为 `off` |
+| `particles` | `off` `low` `mid` `high` | `mid` | 霜点 0 / 14 / 34 / 64 片，再按视口面积缩放（窄屏自动减量） |
+| `scanlines` | bool | `true` | CRT 扫描线（3px 周期一根暗线） |
+| `grain` | bool | `true` | 录像带噪点（`feTurbulence` 生成的 SVG，`steps(4)` 位移闪烁） |
+| `vignette` | bool | `true` | 暗角 + 左右色散边 |
+| `glitch` | bool | `true` | 信号故障（7.3s 周期里错位闪一下，只在 `motion=full` 时生效） |
+| `hud` | bool | `true` | HUD 四角括号、顶部警示条、`虚狩` / `第6課` / `H.S.O.S.6` 标签 |
+| `console` | `off` `tab` `bar` | `tab` | 快速控制条形态 |
+| `consolePos` | `{x,y}` 或 `null` | `null` | 拖动后的位置；`null` = 右下角 18px |
+| `followHostAppearance` | bool | `false` | 关（默认）时主题夺取外观偏好、锁夜档；开时让位给宿主：宿主浅色 → 昼档「白霜」，深色 → 夜档 |
+| `easterEgg` | bool | `true` | 发送刀光、暗号浮字、可点的月相 |
+
+坏值会被归一化（枚举回默认、数值夹到区间、非法坐标丢弃），不会流进样式层。
+
+**关于「外观偏好被夺取」**：主题切到自己的 id 后，`设置 → 外观` 里的浅/深/跟随系统
+选择框会显示为未选中。想让宿主自己管浅深色，打开 **跟随宿主浅深色偏好**；
+想完全交还控制权，直接关主题。
+
+---
+
+## 效果描述（暂无截图）
+
+本插件在开发环境里没有浏览器控制权限，**没有做像素级视觉验证，因此仓库里不放截图**
+（不想放一张与真实渲染不符的示意图）。这里给逐区域的实现描述，每一条都对应代码与自检断言：
+
+| 区域 | 做法 |
+|---|---|
+| **壁纸层** | `html::before` 铺整套 `background` 简写：两团强调色径向光 + 纵向深紫黑底 + **斜切网格**（115°／25° 两向细网 + 三块硬边斜切色 + 一道金线）。底层面板刻意做得透（画布层透出率 56%），壁纸从面板下透出来；强度 0 时网格消失、面板全不透明，退化成纯换色 |
+| **立绘层** | `html::after`，位置四选一；以落点为中心做径向羽化，让图化进背景而不是切一条硬边；浓度由「立绘不透明度」控制 |
+| **侧栏** | `--dsw-specific-sidebar-fill`（透出率 53%）+ 导航项 hover/active/active-accent 四个令牌 |
+| **聊天区** | `--dsw-alias-bg-base / layer-1..3` 四档递进：越往上越实，正文落在可读性最稳的那一层 |
+| **消息气泡** | `--dsw-specific-bubble`（霜蓝暗块）/ `-highlight`（更亮一档） |
+| **输入框** | `--dsw-specific-input-major`；焦点环换成强调色 |
+| **按钮** | 14 个按钮令牌。夜档主按钮是**霜白色块 + 深墨字**（硬色块 + 高对比），昼档换成深强调色 + 白字 |
+| **滚动条** | 4 个 `--dsw-alias-scrollbar-*` 令牌换成冷调强调色（几何留给宿主，它有宽度、轨道内缩等一整套契约） |
+| **代码块** | 12 个 markdown 令牌 + 9 个 `--shiki-token-*` 换成霜色语法表；`pre` 加 2px 强调色左条与 4px 硬投影。代码块保持 72% 不透明，压得住壁纸 |
+| **Markdown** | 链接 / 行内码 / 标签 / 引用 / 占位色令牌；`blockquote` 左线转金 |
+| **设置页** | `settings-card-fill/stroke` + 自有控制页：卡片带斜切角与硬投影 |
+| **弹窗与菜单** | `bg-overlay`（94%，几乎不透）/ `bg-mask-1..3` / `bg-mask-photo` / `bg-mask-drop` / `specific-menu` / `--dsw-menu-surface-fill` / `menu-group-header-fill` / `tooltip-*`；菜单保持宿主自带的半透明 + backdrop blur |
+| **通知 / 加载** | `toast-bg` / `toast-label`；`bg-skeleton` 取强调色 6% 叠层 |
+| **选区 / 光标** | `::selection` 用强调色 32%；焦点环 = 强调色。系统指针不动 |
+| **CRT 氛围** | 扫描线（3px 周期）+ 慢扫亮带（9.5s 一次）+ 噪点 + 暗角与色散边 + 故障闪（7.3s 周期内错位几毫秒）。全部 `pointer-events: none`，透明度由强度统一缩放 |
+| **HUD** | 四角括号（1px 强调色）、顶部 3px 警示条（45° 斜条）、左上 `虚狩`、右上竖排 `霜月雅刃`、左下金色 `第6課 · H.S.O.S.6`。窄屏自动隐藏竖排与左下标签 |
+| **霜点** | 霜星徽记（形状矢量化自位图），每片独立尺寸/时长/延迟/横向漂移，只动 `transform` 与 `opacity` |
+| **刀光** | 发送时一道 260ms 斜向刀锋（`scaleY` + `translate3d`）加一条 1px 裂纹线。只有画面，没有声音 |
+
+---
+
+## 实现：三层结构
+
+```
+令牌层  ctx.theme.register({ id, colorScheme:'dark', tokens })   注册主题（116 个令牌 × light/dark 两档）
+        ctx.theme.setTheme(id)                                   切到它
+        ctx.theme.overrideTokens(id, { light, dark })             每次改配置重建这一层
+身份层  <style> + documentElement 上的 --sym-* 变量，全部作用域限定在 html[data-miyabi-skin]
+挂件层  shell.overlay（氛围 + 控制条）· settings.section（控制页）· settings.general.item（速切行）
+```
+
+### 四条刻意的设计决定
+
+**1. 令牌层两层都要，不是重复。**
+`register()` 决定 `colorScheme`，顺带让宿主把 `data-ds-dark-theme` 设上（原生控件、滚动条、
+下拉框跟着走）；`overrideTokens` 负责「改配置即时生效」与「浅色档也有值」——
+它按当前配色折叠 `{light, dark}`，所以宿主切浅色时自动变成昼档「白霜」。
+
+**2. 必须处理 `setTheme` 被顶回去。**
+`setTheme()` 只把 `light/dark/system` 写进宿主设置文档，第三方 id 不持久化；
+而 settings scope 一推送，`ThemeRuntime.adopt()` 就会把偏好改回宿主里存着的那个。
+所以插件订阅 `theme/change`，发现偏好被改回去就再抢回来（最小间隔 1.5s）；
+用户打开「跟随宿主浅深色偏好」时则主动让位。
+
+**3. 面板 alpha 是壁纸的总闸门，所以单独立了断言。**
+底层表面画在壁纸之上，透明度就是壁纸可见度。2.0.0 曾把画布层定成 0.62，
+默认强度下壁纸只剩 29.6% 透出、立绘实际可见度只有 7.7%（看起来就是「壁纸没生效」）。
+现在画布层 0.28、侧栏 0.32，并把「画布/侧栏透出率 ≥ 50%、弹层 ≤ 10%、代码块 ≤ 35%」
+写成断言钉死，防止再次被「顺手调实」。
+
+**4. 不嫁接宿主元素的伪元素。**
+宿主元素只吃设计令牌（令牌是宿主承诺的扩展点），所有装饰长在插件自己的元素上
+（`html[data-miyabi-skin]::before/::after` 两个画布层 + 自有浮层）。整张样式表里
+**没有一条规则不以 `html[data-miyabi-skin]` 或 `.miyabi-` 开头**，这条由脚本强制检查。
+
+### 卸载与还原
+
+`ctx.effect` 的清理函数按逆序：解除全部订阅 → 清定时器 → **把外观偏好还给宿主原档** →
+卸覆写层 → 注销主题 → 删样式表 → 摘属性 → 清掉自己写的 `--sym-*` 变量。
+不留残留，也不影响别的主题插件。
+
+---
+
+## 兼容性与自检
+
+```bash
+node tools/build.mjs          # 构建 client.js（零依赖、无子进程、不写临时文件）
+node tools/trace-emblem.mjs   # 换了徽记位图时重跑：位图 → 轮廓（自证 IoU）
+node tools/check.mjs          # 135 项自检，退出码即结论
+```
+
+`check.mjs` 检查的是**「改配置会不会把界面改坏」**，而不是「代码看起来对不对」：
+
+| 组 | 内容 |
+|---|---|
+| 清单 | `package.json` / `exports` / `dsh.bundle.patch` / `dsh.client`(platform·immediately·inject) / patch 行 id 与包名对齐 / icon ≤256 KiB / locale 双语齐全 |
+| 产物 | `__ModuleLoader__.load` 形态、模块 id = 包名、**require 白名单只有 `react`**、导出 isPlugin/inject/apply、素材注入位已替换、产物含内嵌 JPEG |
+| 求值 | 把 `src/*.js` 拼起来在沙箱里求值一次，确认 exports 形态与 inject 名单 |
+| 令牌 | **116 个令牌名逐个核对**在本机 `dsh-client-ui-theme` 真实令牌名单里；每个都给 light/dark 两值 |
+| 对比度 | 半透明面板合成到背景两端色上逐对算 WCAG（结果见上文「可访问性」） |
+| 壁纸 | 画布/侧栏透出率 ≥ 50%、弹层 ≤ 10%、代码块 ≤ 35%、立绘可见度夜档 ≥ 18% 昼档 ≥ 10%、强度 0 时面板完全不透明、界面不透明度调低必须真的更透 |
+| 作用域 | 身份层每条选择器必须落在 `html[data-miyabi-skin]` / `.miyabi-` 内；`!important` 计数；`prefers-reduced-motion` 与动效总开关存在 |
+| 收敛 | 已删除的模块不得复活：扫描产物，`AudioContext`/`SND_`/`ART_crest`/`indexedDB`/`customUrl`/`'artSource'`/`'blade'`/`'night'`/… 一个都不许出现；枚举只剩 art/console/motion/particles；配置里没有 pattern/mode/sound/volume |
+| 徽记 | `emblem.json` 存在、viewBox 64×64、路径 M…Z、**子路径数与轮廓数一致（4 环含孔洞）**、**路径里没有任何颜色**、`fill-rule` 是 evenodd、**IoU ≥ 0.97**、全部坐标落在 0..64、产物里确实内嵌了该轮廓 |
+| 用语 / 配置 / 图形 | zh/en 键集合完全一致、枚举取值都有文案键、无残留已删模块文案；坏值被归一化夹回、上一版遗留键被无视；纹样浓度随强度变化、data URI 转义正确、月相 8 档路径合法 |
+
+### CI
+
+[`.github/workflows/check.yml`](.github/workflows/check.yml) 在每次推送/PR 时：
+构建一次 → **校验提交的 `client.js` 与 `src/` 一致**（否则报错，防止产物与源码脱节）→
+跑 135 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
+
+### 已验证到哪一步（如实说明）
+
+已在本机 Harness 里**实际运行并通过运行时核对**：
+
+- 宿主正常提供 bundle：`/plugins/??@local/ui-skin-miyabi/client.js`（HTTP 200，约 1.4 MB）
+- boot graph 里本包一行带正确依赖边：
+  `inject: ["@deepseek-ai/dsh-client-ui-theme","@deepseek-ai/dsh-client-ui-slots"]`、`immediately: true`
+- **三个槽位都在运行时确认已注册且 `active: true`**（`cordis_inspect_query` → `Slots.listSubTree`）：
+  `shell.overlay` → `miyabi-atmosphere`、`settings.section` → `miyabi`(order 30)、
+  `settings.general.item` → `miyabi-skin`(order 12)
+- 多次重建 bundle（revision 变化 → HMR 推给页面）后，`miyabi-atmosphere` 仍然注册且 active
+
+**没有验证的**：开发环境没有浏览器控制权限，**没有做任何像素级视觉验证**，
+也读不到浏览器控制台。上面这些只能证明「代码到位、槽位挂上、没有崩」，
+**不能证明观感** —— 配色、底纹浓度、立绘大小、CRT 层与 HUD 的实际效果需要你自己看一眼。
+
+### 已知限制
+
+1. **与其它主题插件互斥**：多个插件都往 `body` 行内写 `!important` 令牌时是「后加载者赢」。同时只开一个。
+2. **夺取外观偏好是刻意的**：见「配置项」末尾。
+3. **`followHostAppearance` 下昼档是另一套设计**（冷白纸 + 深强调色），不是把夜档调亮；昼档立绘浓度会被内部乘 0.5。
+4. **产物约 1.4 MB，主要是内嵌立绘**（base64 比原字节大约 1/3）。清空 `assets/` 里的位图重新构建可回到约 130 KB。
+5. **改 bundle 的启用状态要重启进程**；只改 `client.js` 内容由宿主 HMR 推送。
+
+### 常见问题
+
+**`dsh --profile X --dump-config` 报 `patch: entry "xxx" not found`？**
+profile 的 `cordis.patch.yml` 里有一条 `- id: <某行>, disabled: true`，但那个 bundle 处于停用状态、
+它插的行并不存在 —— 这会让**整层 patch 组合失败**（进而可能连累同一层里其它行）。
+把那个 bundle 启用（它的行随后仍会被 patch 关掉，视觉无变化），或删掉那条 patch 项。
+
+---
+
+## 文件结构
+
+```
+dsh-theme-miyabi/
+├─ package.json          # dsh.bundle.patch + dsh.client(web, immediately, inject)
+├─ cordis.patch.yml      # 插入 loader 行：id ui-skin-miyabi
+├─ index.js              # 宿主半侧：空 apply，只为让这一行可挂载
+├─ client.js             # ★ 构建产物（安装用的就是它，约 1.4 MB，含内嵌立绘）
+├─ icon.svg              # 插件图标
+├─ LICENSE               # MIT（仅覆盖代码与自制素材）
+├─ CHANGELOG.md
+├─ locale/{zh,en}.json   # 插件卡片文案
+├─ assets/
+│   ├─ README.md              # 素材版权分区说明（重要）
+│   ├─ art.json               # 逐素材来源/尺寸/sha256/授权，构建时注入，设置页直接显示
+│   ├─ miyabi-wallpaper.jpg   # 立绘原图（2560×1440，逐字节，未修改）※版权素材
+│   ├─ emblem.json            # 霜星轮廓（矢量化产物，不含颜色）
+│   └─ ref/emblem-source.png  # 徽记源位图（仅供复现矢量化）※版权素材
+├─ src/                  # 源码：10 个片段，按文件名顺序共享同一个工厂作用域
+│   ├─ 10-meta.js        #   元信息、枚举、配置基线版本、zh/en 用语表、颜色工具
+│   ├─ 20-store.js       #   配置存储与归一化、基线迁移、月相、环境感知
+│   ├─ 30-palette.js     #   调色板与 116 个令牌（昼/夜 × 强度 × 界面不透明度）
+│   ├─ 40-art.js         #   斜切网格底纹、立绘层、霜星/噪点/警示条
+│   ├─ 45-assets.js      #   打包素材注入点 + 运行时状态
+│   ├─ 50-styles.js      #   身份层样式表（壁纸层/CRT/HUD/组件/动效开关/窄屏）
+│   ├─ 70-effects.js     #   霜点粒子、刀光总线、暗号监听（无声音）
+│   ├─ 80-settings.js    #   设置页与控制件（开关/分段/滑杆/卡片）
+│   ├─ 85-console.js     #   氛围浮层、HUD、月相、可拖动控制条
+│   └─ 90-apply.js       #   apply()：令牌层编排、自愈、槽位注册、卸载还原
+├─ tools/
+│   ├─ build.mjs             # 零依赖构建：src + assets → client.js（含语法检查与体积报告）
+│   ├─ trace-emblem.mjs      # 位图 → 轮廓矢量化（解 PNG/走边界/简化/回栅格 IoU 自证）
+│   ├─ check.mjs             # 零依赖自检：135 项
+│   ├─ publish-preflight.mjs # 发布前检查（README 完整性、交付文件、待提交清单）
+│   └─ publish-github.mjs    # 一键发布到 GitHub（默认 dry-run，--apply 才动手）
+└─ .github/workflows/check.yml
+```
+
+### 开发循环
+
+```bash
+node tools/build.mjs              # 改完 src/ 或 assets/ 后跑这一条
+node tools/check.mjs              # 提交前跑
+node tools/publish-preflight.mjs  # 发布前：README 完整性 / 交付文件 / 待提交清单
+```
+
+### 发布到 GitHub（仅仓库维护者）
+
+```bash
+gh auth login                     # 只需一次
+node tools/publish-github.mjs     # 默认 dry-run，打印将要做什么
+node tools/publish-github.mjs --apply
+```
+
+`publish-github.mjs` 会：取你的 GitHub 登录名 → 替换仓库里的 `InkDemon911` 占位符与
+LICENSE 版权行 → 设好 git 署名 → **重新构建并跑自检（不过就中止）** →
+把改动收进首次提交 → `gh repo create dsh-theme-miyabi --public --source=. --push`。
+幂等，可重复执行。
+
+`src/*.js` **不是独立模块**，而是拼接进同一个工厂作用域的片段：不允许出现
+`import` / `export`（构建脚本会直接报错），顶层声明要唯一命名（前缀约定：
+`META_` / `CFG_` / `PAL_` / `ART_` / `CSS_` / `FX_` / `UI_` / `SET_` / `RUN_`），
+导出统一写在 `90-apply.js`。
+
+---
+
+## 许可
+
+- **代码与自制素材**：MIT，见 [LICENSE](LICENSE)。
+- **第三方版权素材**（立绘与徽记位图）：版权归 miHoYo / HoYoverse，非商业同人用途，
+  见 [assets/README.md](assets/README.md)。
+- 本项目为粉丝同人作品，与米哈游、HoYoverse、DeepSeek 均无关联，也未获官方授权。
+  角色与美术版权归 miHoYo / HoYoverse 所有；如侵权请联系删除。

@@ -1,0 +1,45 @@
+name: check
+
+# 每次推送与 PR 都跑一遍自检：135 项断言，零依赖、无子进程。
+# 它验的是「改配置会不会把界面改坏」——令牌名是否还在宿主名单里、
+# 对比度、壁纸透出率、样式作用域、已删模块有没有复活，等等。
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # 构建产物必须能由 src/ + assets/ 复现出来
+      - name: Build client.js
+        run: node tools/build.mjs
+
+      # 构建后工作区必须干净 —— 否则说明提交的产物与源码不一致
+      - name: Verify client.js is up to date with src/
+        run: |
+          if [ -n "$(git status --porcelain client.js)" ]; then
+            echo "::error::client.js 与 src/ 不一致。请在本地跑 node tools/build.mjs 并提交产物。"
+            git --no-pager diff --stat client.js
+            exit 1
+          fi
+
+      - name: Self-check (135 assertions)
+        run: node tools/check.mjs
+
+      # 换了徽记位图时，矢量化必须仍然自证达标（IoU ≥ 0.97）
+      - name: Re-trace emblem and compare
+        run: |
+          cp assets/emblem.json /tmp/emblem.committed.json
+          node tools/trace-emblem.mjs
+          if ! diff -q /tmp/emblem.committed.json assets/emblem.json >/dev/null; then
+            echo "::warning::assets/emblem.json 与重新矢量化的结果不一致（换过位图或改过参数？）"
+          fi

@@ -1,0 +1,69 @@
+{
+  "name": "@local/ui-skin-miyabi",
+  "version": "3.0.2",
+  "type": "module",
+  "description": "《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记",
+  "icon": "./icon.svg",
+  "license": "MIT",
+  "author": "InkDemon911",
+  "homepage": "https://github.com/InkDemon911/dsh-theme-miyabi#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InkDemon911/dsh-theme-miyabi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/InkDemon911/dsh-theme-miyabi/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "theme",
+    "skin",
+    "hoshimi-miyabi",
+    "zenless-zone-zero",
+    "zzz"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale",
+    "assets/*.json",
+    "assets/*.jpg",
+    "assets/*.png",
+    "src",
+    "tools",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "trace": "node tools/trace-emblem.mjs",
+    "check": "node tools/check.mjs",
+    "preflight": "node tools/publish-preflight.mjs",
+    "publish:github": "node tools/publish-github.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  }
+}
