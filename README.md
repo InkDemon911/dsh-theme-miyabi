@@ -5,7 +5,7 @@
 
 [![check](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml/badge.svg)](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![self-check: 135 assertions](https://img.shields.io/badge/self--check-135%20assertions-brightgreen.svg)](tools/check.mjs)
+[![self-check: 142 assertions](https://img.shields.io/badge/self--check-142%20assertions-brightgreen.svg)](tools/check.mjs)
 
 ```
   霜 ── 霜蓝 × 冷紫 × 金线      唯一模式
@@ -62,7 +62,7 @@
   - `settings.section`：「霜月雅刃」控制页
   - `settings.general.item`：通用设置里的一行速切
 - **强度 0–100 无级调节**：0 = 只换配色（面板不透明、无氛围），100 = 完整氛围 + 通透面板
-- **界面不透明度 40–100%** 与**立绘不透明度**两个独立旋钮
+- **界面不透明度 40–100%（默认 40%）** 与**立绘不透明度 4–100%（默认 100%）**两个独立旋钮 —— 出厂就是「壁纸优先」的样子
 - **立绘位置四选一**：无 / 贴左（默认）/ 贴右 / 右侧水印
 - **霜星**（雪花图样）的形状由 [`tools/trace-emblem.mjs`](tools/trace-emblem.mjs)
   从位图**矢量化**而来（回栅格 IoU 0.9981），路径不含颜色，颜色在渲染时给
@@ -177,12 +177,12 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 
 | 键 | 取值 | 默认 | 说明 |
 |---|---|---|---|
-| `cfgRev` | 整数 | `3` | 设计基线版本。基线字段升版时自动拉回新默认，用户偏好不动 |
+| `cfgRev` | 整数 | `4` | 设计基线版本。基线字段升版时自动拉回新默认，用户偏好不动 |
 | `enabled` | bool | `true` | 总开关。关闭 = 摘掉 `data-miyabi-skin`、撤样式表、卸令牌层、把外观偏好还给宿主 |
 | `intensity` | 0–100 | `78` | **0 = 只换配色**（面板不透明、无氛围）；**100 = 完整氛围 + 通透面板**。一个变量驱动全部效果层与面板 alpha |
-| `panelOpacity` | 40–100 | `100` | **界面不透明度**。100% = 设计值（壁纸与立绘明显透出）；调低则面板更透 |
+| `panelOpacity` | 40–100 | `40` | **界面不透明度**（默认 40%）。只调**氛围面板**：100% = 设计值，越小画布／侧栏／卡片／气泡／输入框越透、壁纸越清楚。弹层、代码块、选区带 alpha 下限，不会被调到压不住壁纸 |
 | `art` | `none` `left` `right` `watermark` | `left` | 立绘位置。贴左／贴右按高度贴合并坐在底边，水印是右侧竖直居中；横向超出由窗口裁掉。`none` 只关立绘、不关主题 |
-| `artOpacity` | 4–100 | `42` | 立绘浓度（昼档内部再乘 0.5，防止照片压穿浅底文字） |
+| `artOpacity` | 4–100 | `100` | 立绘浓度（默认 100%）。夜档原样生效，昼档内部乘 0.5 天花板，防止照片压穿浅底文字 |
 | `motion` | `full` `lite` `off` | `full` | 完整（含滚动亮带与故障闪烁）/ 轻微（霜点静止）/ 关闭。系统 `prefers-reduced-motion` 命中时强制为 `off` |
 | `particles` | `off` `low` `mid` `high` | `mid` | 霜点 0 / 14 / 34 / 64 片，再按视口面积缩放（窄屏自动减量） |
 | `scanlines` | bool | `true` | CRT 扫描线（3px 周期一根暗线） |
@@ -210,7 +210,7 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 
 | 区域 | 做法 |
 |---|---|
-| **壁纸层** | `html::before` 铺整套 `background` 简写：两团强调色径向光 + 纵向深紫黑底 + **斜切网格**（115°／25° 两向细网 + 三块硬边斜切色 + 一道金线）。底层面板刻意做得透（画布层透出率 56%），壁纸从面板下透出来；强度 0 时网格消失、面板全不透明，退化成纯换色 |
+| **壁纸层** | `html::before` 铺整套 `background` 简写：两团强调色径向光 + 纵向深紫黑底 + **斜切网格**（115°／25° 两向细网 + 三块硬边斜切色 + 一道金线）。底层面板刻意做得透（默认设置下画布层透出率 69%），壁纸从面板下透出来；强度 0 时网格消失、面板全不透明，退化成纯换色 |
 | **立绘层** | `html::after`，位置四选一；以落点为中心做径向羽化，让图化进背景而不是切一条硬边；浓度由「立绘不透明度」控制 |
 | **侧栏** | `--dsw-specific-sidebar-fill`（透出率 53%）+ 导航项 hover/active/active-accent 四个令牌 |
 | **聊天区** | `--dsw-alias-bg-base / layer-1..3` 四档递进：越往上越实，正文落在可读性最稳的那一层 |
@@ -278,7 +278,7 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 ```bash
 node tools/build.mjs          # 构建 client.js（零依赖、无子进程、不写临时文件）
 node tools/trace-emblem.mjs   # 换了徽记位图时重跑：位图 → 轮廓（自证 IoU）
-node tools/check.mjs          # 135 项自检，退出码即结论
+node tools/check.mjs          # 142 项自检，退出码即结论
 ```
 
 `check.mjs` 检查的是**「改配置会不会把界面改坏」**，而不是「代码看起来对不对」：
@@ -290,7 +290,7 @@ node tools/check.mjs          # 135 项自检，退出码即结论
 | 求值 | 把 `src/*.js` 拼起来在沙箱里求值一次，确认 exports 形态与 inject 名单 |
 | 令牌 | **116 个令牌名逐个核对**在本机 `dsh-client-ui-theme` 真实令牌名单里；每个都给 light/dark 两值 |
 | 对比度 | 半透明面板合成到背景两端色上逐对算 WCAG（结果见上文「可访问性」） |
-| 壁纸 | 画布/侧栏透出率 ≥ 50%、弹层 ≤ 10%、代码块 ≤ 35%、立绘可见度夜档 ≥ 18% 昼档 ≥ 10%、强度 0 时面板完全不透明、界面不透明度调低必须真的更透 |
+| 壁纸 | 画布/侧栏透出率 ≥ 50%、弹层 ≤ 10%、代码块 ≤ 35%、立绘可见度夜档 ≥ 18% 昼档 ≥ 10%、**立绘不透明度按档位生效（夜档原样／昼档 0.5 天花板）**、强度 0 时面板完全不透明、界面不透明度调低必须真的更透、**最狠组合（强度 100% ＋ 界面不透明度 40%）下弹层与代码块仍压得住壁纸** |
 | 作用域 | 身份层每条选择器必须落在 `html[data-miyabi-skin]` / `.miyabi-` 内；`!important` 计数；`prefers-reduced-motion` 与动效总开关存在 |
 | 收敛 | 已删除的模块不得复活：扫描产物，`AudioContext`/`SND_`/`ART_crest`/`indexedDB`/`customUrl`/`'artSource'`/`'blade'`/`'night'`/… 一个都不许出现；枚举只剩 art/console/motion/particles；配置里没有 pattern/mode/sound/volume |
 | 徽记 | `emblem.json` 存在、viewBox 64×64、路径 M…Z、**子路径数与轮廓数一致（4 环含孔洞）**、**路径里没有任何颜色**、`fill-rule` 是 evenodd、**IoU ≥ 0.97**、全部坐标落在 0..64、产物里确实内嵌了该轮廓 |
@@ -300,7 +300,7 @@ node tools/check.mjs          # 135 项自检，退出码即结论
 
 [`.github/workflows/check.yml`](.github/workflows/check.yml) 在每次推送/PR 时：
 构建一次 → **校验提交的 `client.js` 与 `src/` 一致**（否则报错，防止产物与源码脱节）→
-跑 135 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
+跑 142 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
 
 ### 已验证到哪一步（如实说明）
 
@@ -367,7 +367,7 @@ dsh-theme-miyabi/
 ├─ tools/
 │   ├─ build.mjs             # 零依赖构建：src + assets → client.js（含语法检查与体积报告）
 │   ├─ trace-emblem.mjs      # 位图 → 轮廓矢量化（解 PNG/走边界/简化/回栅格 IoU 自证）
-│   ├─ check.mjs             # 零依赖自检：135 项
+│   ├─ check.mjs             # 零依赖自检：142 项
 │   ├─ publish-preflight.mjs # 发布前检查（README 完整性、交付文件、待提交清单）
 │   └─ publish-github.mjs    # 一键发布到 GitHub（默认 dry-run，--apply 才动手）
 └─ .github/workflows/check.yml

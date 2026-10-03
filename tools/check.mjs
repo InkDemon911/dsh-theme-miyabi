@@ -415,7 +415,17 @@ if (M) {
       seen >= floor,
       `${scheme} 立绘实际可见度 ≥ ${(floor * 100).toFixed(0)}%（实测 ${(seen * 100).toFixed(1)}%）`,
     )
-    ok('壁纸', art.alpha <= 0.6, `${scheme} 立绘不透明度有上限（实测 ${(art.alpha * 100).toFixed(0)}%）`)
+    /* 立绘不透明度的档位规则：夜档按设置原样生效（默认 100% → 1.0），
+       昼档内部再乘 0.5 天花板（浅底压不住照片时，深色字会掉对比度）。
+       默认值调到 100% 之后，原来那条「默认不超过 60%」的断言就不再成立了 ——
+       它描述的是旧默认，不是一条设计不变量；换成这条描述真正的规则。 */
+    const artCeiling = scheme === 'dark' ? 1 : 0.5
+    const artExpect = Math.min(1, (dcfg.artOpacity / 100) * artCeiling)
+    ok(
+      '壁纸',
+      Math.abs(art.alpha - artExpect) < 1e-6 && art.alpha <= 1,
+      `${scheme} 立绘不透明度按档位生效（实测 ${(art.alpha * 100).toFixed(0)}%，应为 ${(artExpect * 100).toFixed(0)}%）`,
+    )
   }
   // 强度 0 = 只换配色：面板必须完全不透明（壁纸彻底退场）
   const solid = M.PAL_pair(0, dui)
@@ -431,6 +441,24 @@ if (M) {
     parse(M.PAL_pair(dfx, 0.4)['--dsw-alias-bg-base'].dark).a <
       parse(M.PAL_pair(dfx, 1)['--dsw-alias-bg-base'].dark).a,
     '界面不透明度调低后画布更透',
+  )
+  /* 下限的作用：界面不透明度调到下限（40%）**并且**强度拉满（100%）这个
+     最狠的组合下，弹层与代码块仍然压得住壁纸。没有这个下限，40% 会把
+     overlay 乘到 0.38、code 乘到 0.29，下拉菜单和代码块就会透出壁纸。 */
+  for (const scheme of ['dark', 'light']) {
+    const hard = M.PAL_pair(1, 0.4)
+    const ao = parse(hard['--dsw-alias-bg-overlay'][scheme]).a
+    const ac = parse(hard['--dsw-alias-markdown-code-block'][scheme]).a
+    ok('壁纸', 1 - ao <= 0.1, `${scheme} 最狠组合下弹层仍几乎不透（实测 ${((1 - ao) * 100).toFixed(1)}%）`)
+    ok('壁纸', 1 - ac <= 0.35, `${scheme} 最狠组合下代码块仍足够实（实测 ${((1 - ac) * 100).toFixed(1)}%）`)
+  }
+  /* 出厂默认值本身是被点名要求过的，钉住它，防止以后被「顺手调回去」 */
+  ok('配置', M.CFG_DEFAULTS.panelOpacity === 40, '界面不透明度默认 40%', String(M.CFG_DEFAULTS.panelOpacity))
+  ok('配置', M.CFG_DEFAULTS.artOpacity === 100, '立绘不透明度默认 100%', String(M.CFG_DEFAULTS.artOpacity))
+  ok(
+    '配置',
+    M.META_CFG_REBASE.indexOf('panelOpacity') >= 0 && M.META_CFG_REBASE.indexOf('artOpacity') >= 0,
+    '两个不透明度都是设计基线字段（升版会拉回新默认）',
   )
 
   /* ═══ 7. 作用域 ═════════════════════════════════════════════════════════ */

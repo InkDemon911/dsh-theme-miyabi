@@ -24,9 +24,9 @@ const META_LS_KEY = 'dsh-theme-miyabi:cfg:v2'
  * 升这个号 = 丢弃盘里那个基线字段、拉回新默认；真正的用户偏好
  * （开关、动效、粒子、控制条…）原样保留。
  */
-const META_CFG_REV = 3
+const META_CFG_REV = 4
 /** 升版时拉回新默认的字段（只放设计基线，不放用户偏好）。 */
-const META_CFG_REBASE = ['artOpacity']
+const META_CFG_REBASE = ['artOpacity', 'panelOpacity']
 /** 打包内嵌的那张立绘在素材包里的键名（由 assets/ 文件名转小写得到）。 */
 const META_ART_KEY = 'miyabi-wallpaper'
 /** 客户端语言命名空间（挂在 ctx.locale 上）。 */

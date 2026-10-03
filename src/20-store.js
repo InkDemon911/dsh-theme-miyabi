@@ -14,12 +14,14 @@ const CFG_DEFAULTS = Object.freeze({
   enabled: true,
   // 强度：0 = 只换配色（面板不透明、无氛围），100 = 完整氛围 + 通透面板。
   intensity: 78,
-  // 界面不透明度：100% = 设计值（壁纸能明显透出来），越小面板越透、壁纸越清楚。
-  // 下限 40% 是为了不给出一个「字都压不住」的可用状态。
-  panelOpacity: 100,
+  // 界面不透明度：100% = 设计值（面板最实），越小面板越透、壁纸越清楚。
+  // 默认 40%（下限）：出厂就是要「壁纸优先」的样子。注意这一项只影响**氛围面板**，
+  // 弹层／代码块／选区那几个必须压住壁纸的表面在 PAL_SURFACE 里带 alpha 下限，
+  // 不会被调到看不清（见 30-palette.js 的 PAL_surface 与「壁纸」断言）。
+  panelOpacity: 40,
   // 立绘：按高度贴合，位置可选（默认贴左），这里只调浓淡。
   art: 'left',
-  artOpacity: 42,
+  artOpacity: 100,
   motion: 'full',
   particles: 'mid',
   scanlines: true,
