@@ -430,23 +430,7 @@ node tools/publish-preflight.mjs  # 发布前：README 完整性 / 交付文件 
 `make-figures.mjs` 的两个要点：颜色与几何从 `src/` **求值**取得（与 tools/check.mjs 同一套沙箱），
 所以图不可能与代码脱节；底纹类图直接用生产函数的返回值渲染，不是重画的近似品。
 
-### 发布到 GitHub（仅仓库维护者）
 
-```bash
-gh auth login                     # 只需一次
-node tools/publish-github.mjs     # 默认 dry-run，打印将要做什么
-node tools/publish-github.mjs --apply
-```
-
-`publish-github.mjs` 会：取你的 GitHub 登录名 → 替换仓库里的 `InkDemon911` 占位符与
-LICENSE 版权行 → 设好 git 署名 → **重新构建并跑自检（不过就中止）** →
-把改动收进首次提交 → `gh repo create dsh-theme-miyabi --public --source=. --push`。
-幂等，可重复执行。
-
-`src/*.js` **不是独立模块**，而是拼接进同一个工厂作用域的片段：不允许出现
-`import` / `export`（构建脚本会直接报错），顶层声明要唯一命名（前缀约定：
-`META_` / `CFG_` / `PAL_` / `ART_` / `CSS_` / `FX_` / `UI_` / `SET_` / `RUN_`），
-导出统一写在 `90-apply.js`。
 
 ---
 
