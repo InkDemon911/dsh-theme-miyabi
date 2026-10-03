@@ -4,6 +4,33 @@
 
 ---
 
+## 4.0.0
+
+**改名为 `dsh-theme-miyabi`：仓库名、包名、主题 id 三者统一**
+
+- 包名 `@local/ui-skin-miyabi` → **`dsh-theme-miyabi`**
+- 主题 id、loader 行 id、`ctx.locale` 命名空间：`ui-skin-miyabi` → **`dsh-theme-miyabi`**
+- 浏览器模块 id（`window.__ModuleLoader__.load({ id })`）随之变成 `dsh-theme-miyabi`，
+  与构建产物、boot graph 的键保持一致
+- 配置文件键：`ui-skin-miyabi:cfg:v2` → **`dsh-theme-miyabi:cfg:v2`**
+
+### 升级已有安装要注意（破坏性）
+
+1. **必须重装**：profile 里原先那条 `link:` 依赖与 loader 行都指向旧名，
+   需要按 README 重新 `dsh plugin --profile <p> add "link:<路径>"`，
+   并把 patch 里指向旧 id 的行改成 `dsh-theme-miyabi`（否则会报
+   `patch: entry "ui-skin-miyabi" not found`，整层 patch 组合失败）。
+2. **必须重启进程**：包名的解析结果在启动时缓存，改 bundle 的启用状态也要重启（startup profile）。
+3. **设置会重置一次**：`localStorage` 的键名跟着改了，皮肤会回到出厂默认
+   （开关、强度、界面不透明度、立绘位置与浓淡、动效、氛围开关、控制条、彩蛋）。
+   这是刻意选择 —— 公开分发的插件不该留着旧身份的存储键。
+4. 主题在 `ctx.theme` 里注册的 id 变了，所以「设置 → 外观」里原来指向旧 id 的偏好会失效；
+   皮肤自己在启动时会重新 `setTheme`，无需手工处理。
+
+（此前各版本的改动见下。）
+
+---
+
 ## 3.0.2
 
 **霜星（雪花图样）改为从位图矢量化**

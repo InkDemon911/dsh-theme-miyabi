@@ -13,13 +13,15 @@
 
 | | |
 |---|---|
-| 包名 | `@local/ui-skin-miyabi` |
-| 主题 id / loader 行 id | `ui-skin-miyabi` |
-| 版本 | 3.0.2 |
+| 包名 | `dsh-theme-miyabi` |
+| 主题 id / loader 行 id | `dsh-theme-miyabi` |
+| 版本 | 4.0.0 |
 | 适配 | DeepSeek Harness 的 Web GUI 与桌面客户端（同一份代码，`dsh.client.platform` 只有 `web` 一个合法取值） |
 
-> **仓库名与包名不一致是有意的**：仓库叫 `dsh-theme-miyabi`，而包名 / 主题 id 保持
-> `ui-skin-miyabi` 不变，这样已有安装（profile 里的 `link:` 与 patch 行）不用动就能升级。
+> **仓库名、包名、主题 id 三者同名**（`dsh-theme-miyabi`），安装时 profile 的依赖键、
+> loader 行 id 与 `ctx.theme` 里注册的主题 id 都是这一个名字，不会出现「按包名找不到行」的困惑。
+> 4.0.0 之前叫 `@local/ui-skin-miyabi` / `ui-skin-miyabi`，改名的影响见
+> [CHANGELOG](CHANGELOG.md#400)（**已有安装需要重装并重启**）。
 
 ---
 
@@ -105,8 +107,8 @@ dsh --profile <profile> --dump-config
 应当能看到：
 
 ```yaml
-- id: ui-skin-miyabi
-  name: '@local/ui-skin-miyabi'
+- id: dsh-theme-miyabi
+  name: 'dsh-theme-miyabi'
   disabled: false
 ```
 
@@ -125,7 +127,7 @@ dsh --profile <profile> --dump-config
 ### 卸载
 
 ```bash
-dsh plugin --profile <profile> remove @local/ui-skin-miyabi
+dsh plugin --profile <profile> remove dsh-theme-miyabi
 ```
 
 或者只关主题不卸包：**设置 → 霜月雅刃 → 关闭并还原宿主外观**（幂等，随时开回来）。
@@ -166,7 +168,7 @@ dsh plugin --profile <profile> remove @local/ui-skin-miyabi
 
 ## 配置项
 
-全部配置存在浏览器 `localStorage`，键 `ui-skin-miyabi:cfg:v2`（一份 JSON）。
+全部配置存在浏览器 `localStorage`，键 `dsh-theme-miyabi:cfg:v2`（一份 JSON）。
 **不收集、不上传任何数据**，也不使用 IndexedDB。
 
 > 为什么不用宿主设置文档：第三方令牌层没有写入宿主 settings 的通道
@@ -304,7 +306,7 @@ node tools/check.mjs          # 135 项自检，退出码即结论
 
 已在本机 Harness 里**实际运行并通过运行时核对**：
 
-- 宿主正常提供 bundle：`/plugins/??@local/ui-skin-miyabi/client.js`（HTTP 200，约 1.4 MB）
+- 宿主正常提供 bundle：`/plugins/??dsh-theme-miyabi/client.js`（HTTP 200，约 1.4 MB）
 - boot graph 里本包一行带正确依赖边：
   `inject: ["@deepseek-ai/dsh-client-ui-theme","@deepseek-ai/dsh-client-ui-slots"]`、`immediately: true`
 - **三个槽位都在运行时确认已注册且 `active: true`**（`cordis_inspect_query` → `Slots.listSubTree`）：
@@ -338,7 +340,7 @@ profile 的 `cordis.patch.yml` 里有一条 `- id: <某行>, disabled: true`，�
 ```
 dsh-theme-miyabi/
 ├─ package.json          # dsh.bundle.patch + dsh.client(web, immediately, inject)
-├─ cordis.patch.yml      # 插入 loader 行：id ui-skin-miyabi
+├─ cordis.patch.yml      # 插入 loader 行：id dsh-theme-miyabi
 ├─ index.js              # 宿主半侧：空 apply，只为让这一行可挂载
 ├─ client.js             # ★ 构建产物（安装用的就是它，约 1.4 MB，含内嵌立绘）
 ├─ icon.svg              # 插件图标

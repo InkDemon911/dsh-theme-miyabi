@@ -1,5 +1,5 @@
 /**
- * ui-skin-miyabi「霜月雅刃」—— 宿主半侧。
+ * dsh-theme-miyabi「霜月雅刃」—— 宿主半侧。
  *
  * 这是一套纯客户端主题：令牌层走 ctx.theme，身份层与挂件层都在浏览器里。
  * 宿主半侧只提供一个空的 apply()，作用是让 cordis.patch.yml 插入的 loader

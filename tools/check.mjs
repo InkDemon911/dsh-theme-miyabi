@@ -37,7 +37,7 @@ function ok(group, cond, msg, detail) {
 
 /* ═══ 1. 清单 ═════════════════════════════════════════════════════════════ */
 const pkg = JSON.parse(read('package.json'))
-ok('清单', pkg.name === '@local/ui-skin-miyabi', 'package.json name')
+ok('清单', pkg.name === 'dsh-theme-miyabi', 'package.json name')
 ok('清单', pkg.type === 'module', 'type: module')
 ok('清单', Boolean(pkg.exports && pkg.exports['./client']), 'exports["./client"] 已声明')
 ok(
@@ -76,7 +76,7 @@ for (const locale of ['zh', 'en']) {
 }
 const patch = read(pkg.dsh.bundle.patch.replace(/^\.\//, ''))
 const rowId = (patch.match(/^\s*-\s*id:\s*(\S+)/m) || [])[1]
-ok('清单', rowId === 'ui-skin-miyabi', 'patch 行 id 正确', String(rowId))
+ok('清单', rowId === 'dsh-theme-miyabi', 'patch 行 id 正确', String(rowId))
 ok('清单', patch.includes(`'${pkg.name}'`) || patch.includes(`"${pkg.name}"`), 'patch 行 name 指向本包')
 /* 发布前必须把 owner 占位符换掉：README 的徽章/克隆链接与 package.json 的
    repository / homepage / bugs / author 都写着 __OWNER__。留着就不许提交。 */

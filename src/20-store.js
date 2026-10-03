@@ -148,7 +148,7 @@ function CFG_emit() {
     try {
       listener()
     } catch (err) {
-      console.error('[ui-skin-miyabi] config listener failed', err)
+      console.error('[dsh-theme-miyabi] config listener failed', err)
     }
   }
 }

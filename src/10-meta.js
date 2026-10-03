@@ -10,11 +10,11 @@
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /** 包名：同时是客户端模块表的条目名（module table key）。 */
-const META_PKG = '@local/ui-skin-miyabi'
+const META_PKG = 'dsh-theme-miyabi'
 /** 注册进 ctx.theme 的主题 id（等于包名，便于 inspection 时一眼对上）。 */
-const META_THEME = 'ui-skin-miyabi'
+const META_THEME = 'dsh-theme-miyabi'
 /** 本地偏好存储键。v2：与旧的青绿版皮肤不共用键，避免读到形状不同的旧数据。 */
-const META_LS_KEY = 'ui-skin-miyabi:cfg:v2'
+const META_LS_KEY = 'dsh-theme-miyabi:cfg:v2'
 /**
  * 配置里的设计基线版本。
  *
@@ -30,7 +30,7 @@ const META_CFG_REBASE = ['artOpacity']
 /** 打包内嵌的那张立绘在素材包里的键名（由 assets/ 文件名转小写得到）。 */
 const META_ART_KEY = 'miyabi-wallpaper'
 /** 客户端语言命名空间（挂在 ctx.locale 上）。 */
-const META_NS = 'ui-skin-miyabi'
+const META_NS = 'dsh-theme-miyabi'
 /** 身份层所有选择器的根作用域属性：关掉主题即摘下该属性，样式自然全部失效。 */
 const META_ROOT_ATTR = 'data-miyabi-skin'
 

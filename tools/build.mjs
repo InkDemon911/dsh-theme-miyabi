@@ -146,7 +146,7 @@ writeFileSync(outFile, output)
 
 /* ── 5. 报告 ─────────────────────────────────────────────────────────────── */
 const total = statSync(outFile).size
-console.log(`ui-skin-miyabi 构建完成 → client.js  ${kb(total)}`)
+console.log(`dsh-theme-miyabi 构建完成 → client.js  ${kb(total)}`)
 for (const part of parts) {
   console.log(`  · src/${part.name.padEnd(20)} ${kb(Buffer.byteLength(part.text)).padStart(9)}`)
 }

@@ -37,7 +37,7 @@ function FX_fire(kind, text) {
     try {
       listener(event)
     } catch (err) {
-      console.error('[ui-skin-miyabi] fx listener failed', err)
+      console.error('[dsh-theme-miyabi] fx listener failed', err)
     }
   }
 }

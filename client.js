@@ -1,5 +1,5 @@
 /*!
- * @local/ui-skin-miyabi 3.0.2 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记
+ * dsh-theme-miyabi 4.0.0 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记
  *
  * 自动生成，请勿直接编辑：源码在 src/*.js，改完跑 node tools/build.mjs。
  * 源片段：10-meta.js → 20-store.js → 30-palette.js → 40-art.js → 45-assets.js → 50-styles.js → 70-effects.js → 80-settings.js → 85-console.js → 90-apply.js
@@ -7,7 +7,7 @@
  * 徽记轮廓：4 条闭合环 / 794 顶点 / IoU 0.9981（矢量化自 emblem-source.png，路径不含颜色）
  */
 window.__ModuleLoader__.load({
-  id: "@local/ui-skin-miyabi",
+  id: "dsh-theme-miyabi",
   factory(require) {
     // 模块表按 CJS 语义包装工厂：exports 必须先声明，否则运行时会报
     // "exports is not defined" 并让整行激活失败。
@@ -28,11 +28,11 @@ window.__ModuleLoader__.load({
      * ═══════════════════════════════════════════════════════════════════════════ */
 
     /** 包名：同时是客户端模块表的条目名（module table key）。 */
-    const META_PKG = '@local/ui-skin-miyabi'
+    const META_PKG = 'dsh-theme-miyabi'
     /** 注册进 ctx.theme 的主题 id（等于包名，便于 inspection 时一眼对上）。 */
-    const META_THEME = 'ui-skin-miyabi'
+    const META_THEME = 'dsh-theme-miyabi'
     /** 本地偏好存储键。v2：与旧的青绿版皮肤不共用键，避免读到形状不同的旧数据。 */
-    const META_LS_KEY = 'ui-skin-miyabi:cfg:v2'
+    const META_LS_KEY = 'dsh-theme-miyabi:cfg:v2'
     /**
      * 配置里的设计基线版本。
      *
@@ -48,7 +48,7 @@ window.__ModuleLoader__.load({
     /** 打包内嵌的那张立绘在素材包里的键名（由 assets/ 文件名转小写得到）。 */
     const META_ART_KEY = 'miyabi-wallpaper'
     /** 客户端语言命名空间（挂在 ctx.locale 上）。 */
-    const META_NS = 'ui-skin-miyabi'
+    const META_NS = 'dsh-theme-miyabi'
     /** 身份层所有选择器的根作用域属性：关掉主题即摘下该属性，样式自然全部失效。 */
     const META_ROOT_ATTR = 'data-miyabi-skin'
 
@@ -416,7 +416,7 @@ window.__ModuleLoader__.load({
         try {
           listener()
         } catch (err) {
-          console.error('[ui-skin-miyabi] config listener failed', err)
+          console.error('[dsh-theme-miyabi] config listener failed', err)
         }
       }
     }
@@ -1222,7 +1222,7 @@ window.__ModuleLoader__.load({
         try {
           listener()
         } catch (err) {
-          console.error('[ui-skin-miyabi] runtime listener failed', err)
+          console.error('[dsh-theme-miyabi] runtime listener failed', err)
         }
       }
     }
@@ -2066,7 +2066,7 @@ window.__ModuleLoader__.load({
         try {
           listener(event)
         } catch (err) {
-          console.error('[ui-skin-miyabi] fx listener failed', err)
+          console.error('[dsh-theme-miyabi] fx listener failed', err)
         }
       }
     }
@@ -3120,13 +3120,13 @@ window.__ModuleLoader__.load({
                 const off = ctx.locale.register(META_NS, locale, dict)
                 disposers.push(off)
               } catch (err) {
-                console.error('[ui-skin-miyabi] locale register failed', locale, err)
+                console.error('[dsh-theme-miyabi] locale register failed', locale, err)
               }
             }
             UI_translate = ctx.locale.bind(META_NS)
           } catch (err) {
             // locale 服务不可用也不影响主题本身：退回键名
-            console.error('[ui-skin-miyabi] locale unavailable', err)
+            console.error('[dsh-theme-miyabi] locale unavailable', err)
           }
 
           /* ── 2. 身份层样式表 ───────────────────────────────────────────── */
@@ -3156,7 +3156,7 @@ window.__ModuleLoader__.load({
               tokens: PAL_flat(PAL_pair(fxNow(), uiNow()), 'dark'),
             })
           } catch (err) {
-            console.error('[ui-skin-miyabi] theme register failed', err)
+            console.error('[dsh-theme-miyabi] theme register failed', err)
           }
 
           /**
@@ -3227,7 +3227,7 @@ window.__ModuleLoader__.load({
                 PAL_pair(fxNow(), cfg.panelOpacity / 100),
               )
             } catch (err) {
-              console.error('[ui-skin-miyabi] overrideTokens failed', err)
+              console.error('[dsh-theme-miyabi] overrideTokens failed', err)
             }
           }
 
@@ -3328,7 +3328,7 @@ window.__ModuleLoader__.load({
               try {
                 disposers[i]()
               } catch (err) {
-                console.error('[ui-skin-miyabi] dispose failed', err)
+                console.error('[dsh-theme-miyabi] dispose failed', err)
               }
             }
             if (reassertTimer) window.clearTimeout(reassertTimer)
@@ -3356,7 +3356,7 @@ window.__ModuleLoader__.load({
             }
           }
         },
-        'ui-skin-miyabi: token layer, identity layer and overlay widgets',
+        'dsh-theme-miyabi: token layer, identity layer and overlay widgets',
       )
     }
 

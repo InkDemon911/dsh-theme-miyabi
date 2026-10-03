@@ -85,7 +85,7 @@ function RT_set(patch) {
     try {
       listener()
     } catch (err) {
-      console.error('[ui-skin-miyabi] runtime listener failed', err)
+      console.error('[dsh-theme-miyabi] runtime listener failed', err)
     }
   }
 }

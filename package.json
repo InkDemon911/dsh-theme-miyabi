@@ -1,6 +1,6 @@
 {
-  "name": "@local/ui-skin-miyabi",
-  "version": "3.0.2",
+  "name": "dsh-theme-miyabi",
+  "version": "4.0.0",
   "type": "module",
   "description": "《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记",
   "icon": "./icon.svg",

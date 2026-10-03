@@ -118,13 +118,13 @@ function apply(ctx) {
             const off = ctx.locale.register(META_NS, locale, dict)
             disposers.push(off)
           } catch (err) {
-            console.error('[ui-skin-miyabi] locale register failed', locale, err)
+            console.error('[dsh-theme-miyabi] locale register failed', locale, err)
           }
         }
         UI_translate = ctx.locale.bind(META_NS)
       } catch (err) {
         // locale 服务不可用也不影响主题本身：退回键名
-        console.error('[ui-skin-miyabi] locale unavailable', err)
+        console.error('[dsh-theme-miyabi] locale unavailable', err)
       }
 
       /* ── 2. 身份层样式表 ───────────────────────────────────────────── */
@@ -154,7 +154,7 @@ function apply(ctx) {
           tokens: PAL_flat(PAL_pair(fxNow(), uiNow()), 'dark'),
         })
       } catch (err) {
-        console.error('[ui-skin-miyabi] theme register failed', err)
+        console.error('[dsh-theme-miyabi] theme register failed', err)
       }
 
       /**
@@ -225,7 +225,7 @@ function apply(ctx) {
             PAL_pair(fxNow(), cfg.panelOpacity / 100),
           )
         } catch (err) {
-          console.error('[ui-skin-miyabi] overrideTokens failed', err)
+          console.error('[dsh-theme-miyabi] overrideTokens failed', err)
         }
       }
 
@@ -326,7 +326,7 @@ function apply(ctx) {
           try {
             disposers[i]()
           } catch (err) {
-            console.error('[ui-skin-miyabi] dispose failed', err)
+            console.error('[dsh-theme-miyabi] dispose failed', err)
           }
         }
         if (reassertTimer) window.clearTimeout(reassertTimer)
@@ -354,7 +354,7 @@ function apply(ctx) {
         }
       }
     },
-    'ui-skin-miyabi: token layer, identity layer and overlay widgets',
+    'dsh-theme-miyabi: token layer, identity layer and overlay widgets',
   )
 }
 
