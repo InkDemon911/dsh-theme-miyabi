@@ -7,7 +7,7 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![self-check: 144 assertions](https://img.shields.io/badge/self--check-144%20assertions-brightgreen.svg)](tools/check.mjs)
 
-![总体效果：桌面客户端 + 默认设置](docs/cover.png)
+![总体效果：桌面客户端 + 默认设置](docs/cover.jpg)
 
 *总体效果 —— 桌面客户端、出厂默认设置（界面不透明度 40% / 立绘不透明度 100%）。
 这是仓库里唯一一张真实截图；下文其余图片都是示意图。*
@@ -38,7 +38,7 @@
 |---|---|---|
 | `assets/miyabi-wallpaper.jpg` | 星见雅「1 月月历壁纸（PC 版）」，2560×1440 | 版权归 **miHoYo / HoYoverse** |
 | `assets/ref/emblem-source.png` | 烈霜位图，2048×2048 | 同上 |
-| `docs/cover.png` | 仓库顶部那张总体效果图（真实截图，画面里有同一张壁纸与立绘） | 同上 |
+| `docs/cover.jpg` | 仓库顶部那张总体效果图（真实截图，画面里有同一张壁纸与立绘） | 同上 |
 
 - `miyabi-wallpaper.jpg` 会以 base64 内嵌进构建产物 `client.js`，**所以 `client.js` 里也带着它**。
 
