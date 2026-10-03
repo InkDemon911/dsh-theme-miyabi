@@ -5,7 +5,7 @@
     "license": "版权归 miHoYo / HoYoverse 所有。按使用者授权在本机作为个人界面皮肤使用。注意：构建产物 client.js 内嵌了这张图，因此 client.js 同样带有该版权素材；若要公开分发本插件，请先清空 assets/ 目录重新构建（node tools/build.mjs），得到不含该图的版本。"
   },
   "emblem": {
-    "title": "霜星徽记（雪花图样）",
+    "title": "烈霜徽记（雪花图样）",
     "source": "使用者提供的位图 Ai-Enhance.png（2048×2048，2937832 字节，sha256 5844856DA6A27AACBCDC111FF64AFEABB11B7EAFB2A27CC6449945A4846FF99F），留档在 assets/ref/emblem-source.png。它的**轮廓**由 tools/trace-emblem.mjs 矢量化成 assets/emblem.json（4 条闭合环 / 794 顶点 / 回栅格 IoU 0.9981）。",
     "license": "位图本身不再分发也不再内嵌：进入 client.js 的只有**轮廓坐标**（不含任何颜色），颜色一律由本插件在渲染时给（粒子=白，控制条按钮=currentColor）。位图留档仅供本机复现矢量化的过程，已在 package.json 的 files 里排除。"
   }

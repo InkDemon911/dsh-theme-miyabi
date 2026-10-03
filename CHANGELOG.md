@@ -6,8 +6,13 @@
 
 ## 4.1.1
 
-**补上 README 示例图，并修掉两个「只有看图才发现」的问题**
+**补上 README 示例图，统一术语为「烈霜」，并修掉两个「只有看图才发现」的问题**
 
+- **术语统一：霜星 → 烈霜**（与游戏内星见雅的属性名一致）。仓库内 10 个文件共 21 处：
+  README、`assets/art.json`（会显示在设置页）、`assets/README.md`、`locale/zh.json`
+  与 `package.json` 的描述、`src/40-art.js` 与 `src/85-console.js` 的注释、
+  `tools/build.mjs` 与 `tools/check.mjs` 的文案。**「霜点」（粒子档位）是另一个词，未动。**
+  （本条目的历史记录沿用当时的写法「霜星」。）
 - 新增 `docs/screenshots/` 五张**真实运行界面**截图（主界面／快速控制条／身份层细节／
   通用设置速切行／皮肤控制页），README 顶部新增「示例图」一节
 - 新增 `tools/capture-shots.mjs`：无头 Edge + DevTools 协议抓图。
@@ -80,7 +85,7 @@
 
 ## 3.0.2
 
-**霜星（雪花图样）改为从位图矢量化**
+**烈霜（雪花图样）改为从位图矢量化**
 
 - 新增 `tools/trace-emblem.mjs`：零依赖把徽记位图矢量化成轮廓
   （自解 PNG → 面积平均降采样 → 走边界取全部闭合环 → Douglas–Peucker 简化 →

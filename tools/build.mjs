@@ -110,7 +110,7 @@ const banner = [
     : ' * 内嵌素材：无（仅使用程序生成的自制 SVG 与 CSS 渐变）',
   emblem.path
     ? ` * 徽记轮廓：${emblem.meta.contours} 条闭合环 / ${emblem.meta.points} 顶点 / IoU ${emblem.meta.iou}（矢量化自 ${emblem.meta.source}，路径不含颜色）`
-    : ' * 徽记轮廓：无（霜星退回内置手绘花瓣）',
+    : ' * 徽记轮廓：无（烈霜退回内置手绘花瓣）',
   ' */',
 ].join('\n')
 

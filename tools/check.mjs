@@ -638,7 +638,7 @@ if (M) {
     (bgFull.match(/rgba\(143, 217, 255, [\d.]+\)/g) || []).slice(0, 3).join(' '),
   )
   const flake = M.ART_flake('#ffffff')
-  ok('图形', flake.startsWith('url("data:image/svg+xml,'), '霜星是 data URI（无跨域请求）')
+  ok('图形', flake.startsWith('url("data:image/svg+xml,'), '烈霜是 data URI（无跨域请求）')
   const flakePayload = flake.slice(flake.indexOf(',') + 1, flake.lastIndexOf('")'))
   ok(
     '图形',
@@ -646,7 +646,7 @@ if (M) {
     'data URI 载荷里没有未转义的 < > # " 与空白',
     flakePayload.slice(0, 60),
   )
-  ok('图形', flakePayload.indexOf('%23ffffff') > 0, '霜星沿用调用方给的颜色（白）')
+  ok('图形', flakePayload.indexOf('%23ffffff') > 0, '烈霜沿用调用方给的颜色（白）')
 
   /* 沙箱里 ART_EMBLEM 是未注入的空对象，所以上面这段验的是**退回手绘花瓣**；
      真正的矢量化轮廓由下面的「徽记」一组来验。 */
