@@ -5,7 +5,12 @@
 
 [![check](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml/badge.svg)](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![self-check: 143 assertions](https://img.shields.io/badge/self--check-143%20assertions-brightgreen.svg)](tools/check.mjs)
+[![self-check: 144 assertions](https://img.shields.io/badge/self--check-144%20assertions-brightgreen.svg)](tools/check.mjs)
+
+![总体效果：桌面客户端 + 默认设置](docs/cover.png)
+
+*总体效果 —— 桌面客户端、出厂默认设置（界面不透明度 40% / 立绘不透明度 100%）。
+这是仓库里唯一一张真实截图；下文其余图片都是示意图。*
 
 ```
   霜 ── 霜蓝 × 冷紫 × 金线      唯一模式
@@ -15,7 +20,7 @@
 |---|---|
 | 包名 | `dsh-theme-miyabi` |
 | 主题 id / loader 行 id | `dsh-theme-miyabi` |
-| 版本 | 4.0.0 |
+| 版本 | `4.1.3` |
 | 适配 | DeepSeek Harness 的 Web GUI 与桌面客户端（同一份代码，`dsh.client.platform` 只有 `web` 一个合法取值） |
 
 > **仓库名、包名、主题 id 三者同名**（`dsh-theme-miyabi`），安装时 profile 的依赖键、
@@ -33,6 +38,7 @@
 |---|---|---|
 | `assets/miyabi-wallpaper.jpg` | 星见雅「1 月月历壁纸（PC 版）」，2560×1440 | 版权归 **miHoYo / HoYoverse** |
 | `assets/ref/emblem-source.png` | 烈霜位图，2048×2048 | 同上 |
+| `docs/cover.png` | 仓库顶部那张总体效果图（真实截图，画面里有同一张壁纸与立绘） | 同上 |
 
 - `miyabi-wallpaper.jpg` 会以 base64 内嵌进构建产物 `client.js`，**所以 `client.js` 里也带着它**。
 
@@ -295,7 +301,7 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 ```bash
 node tools/build.mjs          # 构建 client.js（零依赖、无子进程、不写临时文件）
 node tools/trace-emblem.mjs   # 换了徽记位图时重跑：位图 → 轮廓（自证 IoU）
-node tools/check.mjs          # 143 项自检，退出码即结论
+node tools/check.mjs          # 144 项自检，退出码即结论
 ```
 
 `check.mjs` 检查的是**「改配置会不会把界面改坏」**，而不是「代码看起来对不对」：
@@ -317,7 +323,7 @@ node tools/check.mjs          # 143 项自检，退出码即结论
 
 [`.github/workflows/check.yml`](.github/workflows/check.yml) 在每次推送/PR 时：
 构建一次 → **校验提交的 `client.js` 与 `src/` 一致**（否则报错，防止产物与源码脱节）→
-跑 143 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
+跑 144 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
 
 ### 已验证到哪一步（如实说明）
 
@@ -411,7 +417,7 @@ dsh-theme-miyabi/
 ├─ tools/
 │   ├─ build.mjs             # 零依赖构建：src + assets → client.js（含语法检查与体积报告）
 │   ├─ trace-emblem.mjs      # 位图 → 轮廓矢量化（解 PNG/走边界/简化/回栅格 IoU 自证）
-│   ├─ check.mjs             # 零依赖自检：143 项
+│   ├─ check.mjs             # 零依赖自检：144 项
 │   ├─ make-figures.mjs      # README 图示：从 src 求值取色 + 无头 Edge 渲染（本机开发用，不进 CI）
 │   ├─ publish-preflight.mjs # 发布前检查（README 完整性、交付文件、待提交清单）
 │   └─ publish-github.mjs    # 一键发布到 GitHub（默认 dry-run，--apply 才动手）

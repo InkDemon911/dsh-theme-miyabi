@@ -86,6 +86,14 @@ const ownerGaps = ['package.json', 'README.md'].filter(
 ok('清单', ownerGaps.length === 0, '仓库 owner 已填入（__OWNER__ 占位符已替换）', ownerGaps.join(', '))
 ok('清单', /^[a-z0-9][a-z0-9-]*$/.test(String(pkg.name).split('/').pop()), '包名可作目录名')
 ok('清单', !pkg.private, '未标 private（便于从 git 源安装）')
+/* README 身份表里的版本号曾经落后过三个版本（4.0.0 挂到 4.1.2）—— 钉住它。 */
+const readmeVersion = (read('README.md').match(/\|\s*版本\s*\|\s*`([^`]+)`\s*\|/) || [])[1]
+ok(
+  '清单',
+  readmeVersion === pkg.version,
+  'README 身份表里的版本号与 package.json 一致',
+  `README=${readmeVersion} package=${pkg.version}`,
+)
 
 /* ═══ 2. 产物 ═════════════════════════════════════════════════════════════ */
 const clientRel = pkg.exports['./client'].replace(/^\.\//, '')
