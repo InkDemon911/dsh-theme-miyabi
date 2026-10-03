@@ -1,5 +1,5 @@
 /*!
- * dsh-theme-miyabi 4.1.1 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，烈霜形状矢量化自提供的徽记
+ * dsh-theme-miyabi 4.1.2 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，烈霜形状矢量化自提供的徽记
  *
  * 自动生成，请勿直接编辑：源码在 src/*.js，改完跑 node tools/build.mjs。
  * 源片段：10-meta.js → 20-store.js → 30-palette.js → 40-art.js → 45-assets.js → 50-styles.js → 70-effects.js → 80-settings.js → 85-console.js → 90-apply.js

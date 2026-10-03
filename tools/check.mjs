@@ -445,7 +445,7 @@ if (M) {
   /* README 里引用的每张图都必须真的在仓库里 —— 图被改名或漏提交时，
      坏的是一条外链，只有点开才发现。docs/ 不在 npm 包的 files 里，
      所以用 has() 门控：装在别处的副本不会因为这条误报。 */
-  if (has('docs/screenshots')) {
+  if (has('docs/figures')) {
     const readme = read('README.md')
     const refs = [...readme.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)]
       .map((m) => m[1])

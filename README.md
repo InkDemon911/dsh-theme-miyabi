@@ -33,7 +33,6 @@
 |---|---|---|
 | `assets/miyabi-wallpaper.jpg` | 星见雅「1 月月历壁纸（PC 版）」，2560×1440 | 版权归 **miHoYo / HoYoverse** |
 | `assets/ref/emblem-source.png` | 烈霜位图，2048×2048 | 同上 |
-| `docs/screenshots/*.jpg` | 运行界面截图，画面里有同一张壁纸与立绘 | 同上 |
 
 - `miyabi-wallpaper.jpg` 会以 base64 内嵌进构建产物 `client.js`，**所以 `client.js` 里也带着它**。
 
@@ -52,25 +51,29 @@
 
 ---
 
-## 示例图
+## 图示
 
-下面五张都是**真实运行界面**的截图（本机 Harness + 默认设置，1440×900），
-由 [`tools/capture-shots.mjs`](tools/capture-shots.mjs) 用无头 Edge + DevTools 协议抓取，
-不是示意图。**主图裁去了左侧栏** —— 那里是使用者的会话列表，不该进公开仓库。
+四张都是**示意图**，由 [`tools/make-figures.mjs`](tools/make-figures.mjs) 生成，不是界面截图。
+它们不是手画的近似品：颜色与几何全部在沙箱里**从 `src/` 求值取得**，底纹那两张直接把
+`ART_background()` / `ART_noise()` / `ART_tape()` 的返回值交给浏览器渲染 —— 改一个系数，图跟着变。
 
-![主界面](docs/screenshots/01-main.jpg)
+![配色板](docs/figures/fig-palette.png)
 
-**主界面（出厂默认）**：壁纸透出率 69%、立绘 100%、斜切网格底纹、3px 周期 CRT 扫描线、
-烈霜粒子（形状矢量化自徽记）、四角括号与右上竖排「霜月雅刃」、右下角月相控制按钮。
+**配色板** —— `src/30-palette.js` 的全部设计色，夜档与昼档。表面色下面垫了浅色棋盘格，
+用来显通透度（不然深色低 alpha 的表面在深底上就是一块黑）；`↓0.92` 这类标注是那张表面的
+**alpha 下限** —— 「界面不透明度」调到 40% 时它不再跟着变透，菜单与代码块才压得住壁纸。
+斜纹块表示那一条不是色值（例如描边透明度阶梯 `lineA`）。
+
+![层叠结构](docs/figures/fig-layers.png)
+
+**层叠结构** —— 谁画在哪一层、归谁管。宿主元素只吃设计令牌，装饰只长在插件自己的元素上。
 
 | | |
 |---|---|
-| ![快速控制条](docs/screenshots/02-control-bar.jpg) | **快速控制条（长条态，3× 放大）**：主题开关、强度 `−/%/＋`、霜点档位、月相（点一下放刀光）、`☰` 快速设置、`—` 收回图标态。按住空白处可拖动。 |
-| ![身份层细节](docs/screenshots/03-crt-detail.jpg) | **身份层细节（3× 放大）**：斜切网格、烈霜粒子、扫描线、右上竖排标签与角括号、一道金线。 |
-| ![通用设置速切行](docs/screenshots/04-settings-general.jpg) | **设置 → 通用** 里的速切行（槽位 `settings.general.item`）。 |
-| ![皮肤控制页](docs/screenshots/05-settings-miyabi.jpg) | **设置 → 霜月雅刃** 控制页：主题与配色／壁纸与立绘／动效与氛围三组卡片。图里 `界面不透明度 40%` 与 `立绘不透明度 100%` 就是 4.1.0 的新默认值；立绘卡片下方直接显示素材来源与 sha256（读自 `assets/art.json`）。 |
+| ![图形元素](docs/figures/fig-glyphs.png) | **图形元素**：烈霜轮廓（矢量化产物，同一份路径画 188／92／34／14px 四个尺寸）与八档月相（`MOON_litPath()` 的真实输出，朔与望都退化成正确形状）。 |
+| ![底纹与身份层元素](docs/figures/fig-pattern.png) | **底纹与身份层元素**：斜切网格在强度 0／50／78／100 四档下的样子，以及扫描线、录像带噪点、警示条、HUD 角括号、故障层。 |
 
-> 截图里同样含有米哈游的版权美术，授权说明见上一节。
+> 这些示意图**不含**米哈游的美术素材，也不含使用者的界面内容。版权说明见上一节。
 
 ---
 
@@ -228,7 +231,7 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 
 ## 效果描述
 
-逐区域的实现说明。截图见上面的[示例图](#示例图)，下面这一表是**做法**层面的对应关系，
+逐区域的实现说明。图见上面的[图示](#图示)，下面这一表是**做法**层面的对应关系，
 每一条都对应代码与自检断言（自检量的不是「代码看起来对不对」，而是**改配置会不会把界面改坏**）。
 
 | 区域 | 做法 |
@@ -337,8 +340,7 @@ node tools/check.mjs          # 143 项自检，退出码即结论
   `settings.general.item` → `miyabi-skin`(order 12)
 - 多次重建 bundle（revision 变化 → HMR 推给页面）后，`miyabi-atmosphere` 仍然注册且 active
 
-**二、页面内计算值**（[`tools/capture-shots.mjs`](tools/capture-shots.mjs) 在真实页面里读回，
-默认设置下实测）：
+**二、页面内计算值**（开发时用无头 Edge + DevTools 协议在真实页面里读回，默认设置下实测）：
 
 | 探针 | 实测值 | 说明 |
 |---|---|---|
@@ -350,19 +352,22 @@ node tools/check.mjs          # 143 项自检，退出码即结论
 | `--dsw-alias-markdown-code-block` | `rgba(10, 12, 24, 0.75)` | 代码块下限生效（设计 0.72） |
 | `.miyabi-hud-label` / `.miyabi-particle` | `3` / `34` | 三个 HUD 标签、34 片霜点（默认档） |
 
-**三、观感**：示例图那五张是真实截图，并且**逐张看过**（按 3× 放大核对过 HUD 角标、
-烈霜形状与扫描线）。这一轮看图的收获是修掉了两个自检抓不到的问题：通用设置里那行
-还写着「立绘固定左侧」（早已是四选一），左下角金色标签横排时会压在宿主自己的「设置」
+**三、观感**：开发时确实在真实浏览器里跑过，并把渲染结果**逐张看过**（按 3× 放大核对过
+HUD 角标、烈霜形状与扫描线）。这一轮看图的收获是修掉了两个自检抓不到的问题：通用设置里
+那行还写着「立绘固定左侧」（早已是四选一），左下角金色标签横排时会压在宿主自己的「设置」
 按钮上（现改为沿左缘竖排，实测与按钮 `overlaps: false`，留 8px 间隙）。
+
+> 这些渲染核对的截图**没有作为交付物放进仓库** —— 它们会带上使用者的桌面与工作区信息，
+> 而且画面里有米哈游的版权美术。正文用的是上面的[图示](#图示)。
 
 **仍然没有验证的**：
 
-- **跨环境观感**。截图只反映本机（同一张壁纸、Windows + Edge、1440×900）。别的壁纸亮度、
-  别的缩放比例、浅色档「白霜」的实际相貌，都需要你自己看一眼。
-- **浅色档没有实拍**。昼档要宿主切到浅色才出现，本轮只抓到夜档。
+- **跨环境观感**。核对只在本机做过（Windows + Edge、1440×900、同一张壁纸）。换成别的壁纸亮度、
+  别的缩放比例、别的浏览器，观感都可能不同，需要你自己看一眼。
+- **浅色档没有实拍**。昼档要宿主切到浅色才出现，本轮只核对过夜档。
 - **浏览器控制台没有读**。没有接 `Runtime.consoleAPICalled`，所以「有没有报错」只由
   「界面渲染正常」间接推断。
-- **交互路径只走了一部分**。截图为脚本驱动：主界面、控制条、设置页两张。拖拽控制条、
+- **交互路径只走了一部分**。自动化只覆盖了主界面、控制条、设置页两张。拖拽控制条、
   暗号彩蛋（`霜月` 等）、月相点击放刀光这三条没有自动化覆盖。
 
 ### 已知限制
@@ -394,7 +399,7 @@ dsh-theme-miyabi/
 ├─ LICENSE               # MIT（仅覆盖代码与自制素材）
 ├─ CHANGELOG.md
 ├─ locale/{zh,en}.json   # 插件卡片文案
-├─ docs/screenshots/     # README 示例图（真实截图，由 tools/capture-shots.mjs 生成）※版权素材
+├─ docs/figures/         # README 图示（示意图，由 tools/make-figures.mjs 生成，不含版权素材）
 ├─ assets/
 │   ├─ README.md              # 素材版权分区说明（重要）
 │   ├─ art.json               # 逐素材来源/尺寸/sha256/授权，构建时注入，设置页直接显示
@@ -416,7 +421,7 @@ dsh-theme-miyabi/
 │   ├─ build.mjs             # 零依赖构建：src + assets → client.js（含语法检查与体积报告）
 │   ├─ trace-emblem.mjs      # 位图 → 轮廓矢量化（解 PNG/走边界/简化/回栅格 IoU 自证）
 │   ├─ check.mjs             # 零依赖自检：143 项
-│   ├─ capture-shots.mjs     # README 示例图：无头 Edge + DevTools 协议（本机开发用，不进 CI）
+│   ├─ make-figures.mjs      # README 图示：从 src 求值取色 + 无头 Edge 渲染（本机开发用，不进 CI）
 │   ├─ publish-preflight.mjs # 发布前检查（README 完整性、交付文件、待提交清单）
 │   └─ publish-github.mjs    # 一键发布到 GitHub（默认 dry-run，--apply 才动手）
 └─ .github/workflows/check.yml
@@ -427,12 +432,12 @@ dsh-theme-miyabi/
 ```bash
 node tools/build.mjs              # 改完 src/ 或 assets/ 后跑这一条
 node tools/check.mjs              # 提交前跑
-node tools/capture-shots.mjs      # 改动了外观时重出示例图（需要本机跑着 Harness）
+node tools/make-figures.mjs       # 改动了配色/底纹/图形时重出图示（只需本机有 Edge）
 node tools/publish-preflight.mjs  # 发布前：README 完整性 / 交付文件 / 待提交清单
 ```
 
-`capture-shots.mjs` 的两个要点：用独立 user-data-dir（不碰你正在用的浏览器，
-localStorage 干净所以抓到的是出厂默认），主图裁掉左侧栏（那里是使用者的会话列表）。
+`make-figures.mjs` 的两个要点：颜色与几何从 `src/` **求值**取得（与 tools/check.mjs 同一套沙箱），
+所以图不可能与代码脱节；底纹类图直接用生产函数的返回值渲染，不是重画的近似品。
 
 ### 发布到 GitHub（仅仓库维护者）
 
