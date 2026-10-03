@@ -9,13 +9,17 @@ on:
   pull_request:
   workflow_dispatch:
 
+# 最小权限：这个工作流只读仓库，不需要写任何东西
+permissions:
+  contents: read
+
 jobs:
   selfcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
