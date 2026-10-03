@@ -230,9 +230,14 @@ html[data-miyabi-skin] blockquote {
   left: calc(var(--sym-hud-gap) + 34px);
   top: calc(var(--sym-hud-gap) + 4px + var(--dsh-frame-chrome-top, 0px));
 }
+/* 左下标签走竖排、贴着左缘往上长：横排会撞到宿主自己的左下角按钮
+   （「设置」的图标与文字正好占着那一段，实测 3× 放大可见字被压在按钮下沿）。
+   竖排后它只占左缘约 10px 宽的空隙，与右上竖排标签形成对角呼应。 */
 .miyabi-hud-label.is-bl {
-  left: calc(var(--sym-hud-gap) + 34px);
-  bottom: calc(var(--sym-hud-gap) + 4px);
+  left: calc(var(--sym-hud-gap) - 7px);
+  bottom: calc(var(--sym-hud-gap) + 46px);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.42em;
   color: rgb(var(--sym-gold-rgb) / 65%);
 }
 .miyabi-hud-label.is-tr {

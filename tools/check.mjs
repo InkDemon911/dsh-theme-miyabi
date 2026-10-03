@@ -442,6 +442,22 @@ if (M) {
       parse(M.PAL_pair(dfx, 1)['--dsw-alias-bg-base'].dark).a,
     '界面不透明度调低后画布更透',
   )
+  /* README 里引用的每张图都必须真的在仓库里 —— 图被改名或漏提交时，
+     坏的是一条外链，只有点开才发现。docs/ 不在 npm 包的 files 里，
+     所以用 has() 门控：装在别处的副本不会因为这条误报。 */
+  if (has('docs/screenshots')) {
+    const readme = read('README.md')
+    const refs = [...readme.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)]
+      .map((m) => m[1])
+      .filter((r) => !/^https?:/.test(r))
+    const missing = refs.filter((r) => !has(r))
+    ok(
+      '产物',
+      refs.length > 0 && missing.length === 0,
+      `README 引用的 ${refs.length} 张本地图片都存在`,
+      missing.join(', '),
+    )
+  }
   /* 下限的作用：界面不透明度调到下限（40%）**并且**强度拉满（100%）这个
      最狠的组合下，弹层与代码块仍然压得住壁纸。没有这个下限，40% 会把
      overlay 乘到 0.38、code 乘到 0.29，下拉菜单和代码块就会透出壁纸。 */

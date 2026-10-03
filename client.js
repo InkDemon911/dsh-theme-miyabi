@@ -1,5 +1,5 @@
 /*!
- * dsh-theme-miyabi 4.1.0 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记
+ * dsh-theme-miyabi 4.1.1 —— 《绝区零》星见雅主题皮肤「霜月雅刃」：霜蓝×冷紫×黑×白×少量红金令牌层 + 新艾利都 CRT／扫描线／噪点／警示条身份层 + 斜切网格底纹；立绘可选位置，霜星形状矢量化自提供的徽记
  *
  * 自动生成，请勿直接编辑：源码在 src/*.js，改完跑 node tools/build.mjs。
  * 源片段：10-meta.js → 20-store.js → 30-palette.js → 40-art.js → 45-assets.js → 50-styles.js → 70-effects.js → 80-settings.js → 85-console.js → 90-apply.js
@@ -24,7 +24,7 @@ window.__ModuleLoader__.load({
      * 命名约定：本段用 META_ / TXT_ / U_ 前缀。
      *
      * 收敛后的形态：单一模式（霜）、单一底纹（斜切网格）、单一立绘（使用者提供的
-     * 那张图，位置固定左侧）、无声音模块。
+     * 那张图，位置四选一）、无声音模块。
      * ═══════════════════════════════════════════════════════════════════════════ */
 
     /** 包名：同时是客户端模块表的条目名（module table key）。 */
@@ -69,7 +69,7 @@ window.__ModuleLoader__.load({
       'meta.subtitle': '星见雅 · 虚狩',
       'nav': '霜月雅刃',
       'row.title': '霜月雅刃 · 星见雅主题',
-      'row.desc': '霜蓝冷调令牌、斜切网格底纹、CRT 扫描线与噪点，立绘固定左侧。',
+      'row.desc': '霜蓝冷调令牌、斜切网格底纹、CRT 扫描线与霜点，立绘可选位置（默认贴左）。',
       'group.theme': '主题与配色',
       'group.scene': '壁纸与立绘',
       'group.fx': '动效与氛围',
@@ -1474,9 +1474,14 @@ window.__ModuleLoader__.load({
       left: calc(var(--sym-hud-gap) + 34px);
       top: calc(var(--sym-hud-gap) + 4px + var(--dsh-frame-chrome-top, 0px));
     }
+    /* 左下标签走竖排、贴着左缘往上长：横排会撞到宿主自己的左下角按钮
+       （「设置」的图标与文字正好占着那一段，实测 3× 放大可见字被压在按钮下沿）。
+       竖排后它只占左缘约 10px 宽的空隙，与右上竖排标签形成对角呼应。 */
     .miyabi-hud-label.is-bl {
-      left: calc(var(--sym-hud-gap) + 34px);
-      bottom: calc(var(--sym-hud-gap) + 4px);
+      left: calc(var(--sym-hud-gap) - 7px);
+      bottom: calc(var(--sym-hud-gap) + 46px);
+      writing-mode: vertical-rl;
+      letter-spacing: 0.42em;
       color: rgb(var(--sym-gold-rgb) / 65%);
     }
     .miyabi-hud-label.is-tr {

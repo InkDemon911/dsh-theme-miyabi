@@ -1,6 +1,6 @@
 name: check
 
-# 每次推送与 PR 都跑一遍自检：142 项断言，零依赖、无子进程。
+# 每次推送与 PR 都跑一遍自检：143 项断言，零依赖、无子进程。
 # 它验的是「改配置会不会把界面改坏」——令牌名是否还在宿主名单里、
 # 对比度、壁纸透出率、样式作用域、已删模块有没有复活，等等。
 on:
@@ -36,7 +36,7 @@ jobs:
             exit 1
           fi
 
-      - name: Self-check (142 assertions)
+      - name: Self-check (143 assertions)
         run: node tools/check.mjs
 
       # 换了徽记位图时，矢量化必须仍然自证达标（IoU ≥ 0.97）

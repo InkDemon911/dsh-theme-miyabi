@@ -5,7 +5,7 @@
 
 [![check](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml/badge.svg)](https://github.com/InkDemon911/dsh-theme-miyabi/actions/workflows/check.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![self-check: 142 assertions](https://img.shields.io/badge/self--check-142%20assertions-brightgreen.svg)](tools/check.mjs)
+[![self-check: 143 assertions](https://img.shields.io/badge/self--check-143%20assertions-brightgreen.svg)](tools/check.mjs)
 
 ```
   霜 ── 霜蓝 × 冷紫 × 金线      唯一模式
@@ -33,6 +33,7 @@
 |---|---|---|
 | `assets/miyabi-wallpaper.jpg` | 星见雅「1 月月历壁纸（PC 版）」，2560×1440 | 版权归 **miHoYo / HoYoverse** |
 | `assets/ref/emblem-source.png` | 烈霜位图，2048×2048 | 同上 |
+| `docs/screenshots/*.jpg` | 运行界面截图，画面里有同一张壁纸与立绘 | 同上 |
 
 - `miyabi-wallpaper.jpg` 会以 base64 内嵌进构建产物 `client.js`，**所以 `client.js` 里也带着它**。
 
@@ -48,6 +49,28 @@
   细节见 [`assets/README.md`](assets/README.md)。
 
 代码与自制素材（底纹、噪点、警示条、HUD、月相、刀光、粒子运动）随 [MIT](LICENSE) 分发。
+
+---
+
+## 示例图
+
+下面五张都是**真实运行界面**的截图（本机 Harness + 默认设置，1440×900），
+由 [`tools/capture-shots.mjs`](tools/capture-shots.mjs) 用无头 Edge + DevTools 协议抓取，
+不是示意图。**主图裁去了左侧栏** —— 那里是使用者的会话列表，不该进公开仓库。
+
+![主界面](docs/screenshots/01-main.jpg)
+
+**主界面（出厂默认）**：壁纸透出率 69%、立绘 100%、斜切网格底纹、3px 周期 CRT 扫描线、
+霜星粒子（形状矢量化自徽记）、四角括号与右上竖排「霜月雅刃」、右下角月相控制按钮。
+
+| | |
+|---|---|
+| ![快速控制条](docs/screenshots/02-control-bar.jpg) | **快速控制条（长条态，3× 放大）**：主题开关、强度 `−/%/＋`、霜点档位、月相（点一下放刀光）、`☰` 快速设置、`—` 收回图标态。按住空白处可拖动。 |
+| ![身份层细节](docs/screenshots/03-crt-detail.jpg) | **身份层细节（3× 放大）**：斜切网格、霜星粒子、扫描线、右上竖排标签与角括号、一道金线。 |
+| ![通用设置速切行](docs/screenshots/04-settings-general.jpg) | **设置 → 通用** 里的速切行（槽位 `settings.general.item`）。 |
+| ![皮肤控制页](docs/screenshots/05-settings-miyabi.jpg) | **设置 → 霜月雅刃** 控制页：主题与配色／壁纸与立绘／动效与氛围三组卡片。图里 `界面不透明度 40%` 与 `立绘不透明度 100%` 就是 4.1.0 的新默认值；立绘卡片下方直接显示素材来源与 sha256（读自 `assets/art.json`）。 |
+
+> 截图里同样含有米哈游的版权美术，授权说明见上一节。
 
 ---
 
@@ -203,10 +226,10 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 
 ---
 
-## 效果描述（暂无截图）
+## 效果描述
 
-本插件在开发环境里没有浏览器控制权限，**没有做像素级视觉验证，因此仓库里不放截图**
-（不想放一张与真实渲染不符的示意图）。这里给逐区域的实现描述，每一条都对应代码与自检断言：
+逐区域的实现说明。截图见上面的[示例图](#示例图)，下面这一表是**做法**层面的对应关系，
+每一条都对应代码与自检断言（自检量的不是「代码看起来对不对」，而是**改配置会不会把界面改坏**）。
 
 | 区域 | 做法 |
 |---|---|
@@ -278,7 +301,7 @@ dsh plugin --profile <profile> remove dsh-theme-miyabi
 ```bash
 node tools/build.mjs          # 构建 client.js（零依赖、无子进程、不写临时文件）
 node tools/trace-emblem.mjs   # 换了徽记位图时重跑：位图 → 轮廓（自证 IoU）
-node tools/check.mjs          # 142 项自检，退出码即结论
+node tools/check.mjs          # 143 项自检，退出码即结论
 ```
 
 `check.mjs` 检查的是**「改配置会不会把界面改坏」**，而不是「代码看起来对不对」：
@@ -300,11 +323,11 @@ node tools/check.mjs          # 142 项自检，退出码即结论
 
 [`.github/workflows/check.yml`](.github/workflows/check.yml) 在每次推送/PR 时：
 构建一次 → **校验提交的 `client.js` 与 `src/` 一致**（否则报错，防止产物与源码脱节）→
-跑 142 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
+跑 143 项自检 → 重新矢量化徽记并与提交的 `emblem.json` 对比。
 
 ### 已验证到哪一步（如实说明）
 
-已在本机 Harness 里**实际运行并通过运行时核对**：
+**一、宿主侧接线**（本机 Harness 实际运行核对通过）：
 
 - 宿主正常提供 bundle：`/plugins/??dsh-theme-miyabi/client.js`（HTTP 200，约 1.4 MB）
 - boot graph 里本包一行带正确依赖边：
@@ -314,9 +337,33 @@ node tools/check.mjs          # 142 项自检，退出码即结论
   `settings.general.item` → `miyabi-skin`(order 12)
 - 多次重建 bundle（revision 变化 → HMR 推给页面）后，`miyabi-atmosphere` 仍然注册且 active
 
-**没有验证的**：开发环境没有浏览器控制权限，**没有做任何像素级视觉验证**，
-也读不到浏览器控制台。上面这些只能证明「代码到位、槽位挂上、没有崩」，
-**不能证明观感** —— 配色、底纹浓度、立绘大小、CRT 层与 HUD 的实际效果需要你自己看一眼。
+**二、页面内计算值**（[`tools/capture-shots.mjs`](tools/capture-shots.mjs) 在真实页面里读回，
+默认设置下实测）：
+
+| 探针 | 实测值 | 说明 |
+|---|---|---|
+| `documentElement[data-miyabi-skin]` | `frost` | 身份层标记已挂上 |
+| `data-miyabi-scheme` / `data-miyabi-motion` | `dark` / `full` | 夜档、完整动效 |
+| `style[data-miyabi-skin]` 数量 | `1` | 身份层样式表已注入，且只有一张 |
+| `--dsw-alias-bg-base` | `rgba(8, 8, 17, 0.307)` | 与代码算出的 0.3074 吻合（界面不透明度 40%） |
+| `--dsw-alias-bg-overlay` | `rgba(16, 16, 32, 0.938)` | 弹层下限生效（设计 0.94） |
+| `--dsw-alias-markdown-code-block` | `rgba(10, 12, 24, 0.75)` | 代码块下限生效（设计 0.72） |
+| `.miyabi-hud-label` / `.miyabi-particle` | `3` / `34` | 三个 HUD 标签、34 片霜点（默认档） |
+
+**三、观感**：示例图那五张是真实截图，并且**逐张看过**（按 3× 放大核对过 HUD 角标、
+霜星形状与扫描线）。这一轮看图的收获是修掉了两个自检抓不到的问题：通用设置里那行
+还写着「立绘固定左侧」（早已是四选一），左下角金色标签横排时会压在宿主自己的「设置」
+按钮上（现改为沿左缘竖排，实测与按钮 `overlaps: false`，留 8px 间隙）。
+
+**仍然没有验证的**：
+
+- **跨环境观感**。截图只反映本机（同一张壁纸、Windows + Edge、1440×900）。别的壁纸亮度、
+  别的缩放比例、浅色档「白霜」的实际相貌，都需要你自己看一眼。
+- **浅色档没有实拍**。昼档要宿主切到浅色才出现，本轮只抓到夜档。
+- **浏览器控制台没有读**。没有接 `Runtime.consoleAPICalled`，所以「有没有报错」只由
+  「界面渲染正常」间接推断。
+- **交互路径只走了一部分**。截图为脚本驱动：主界面、控制条、设置页两张。拖拽控制条、
+  暗号彩蛋（`霜月` 等）、月相点击放刀光这三条没有自动化覆盖。
 
 ### 已知限制
 
@@ -347,6 +394,7 @@ dsh-theme-miyabi/
 ├─ LICENSE               # MIT（仅覆盖代码与自制素材）
 ├─ CHANGELOG.md
 ├─ locale/{zh,en}.json   # 插件卡片文案
+├─ docs/screenshots/     # README 示例图（真实截图，由 tools/capture-shots.mjs 生成）※版权素材
 ├─ assets/
 │   ├─ README.md              # 素材版权分区说明（重要）
 │   ├─ art.json               # 逐素材来源/尺寸/sha256/授权，构建时注入，设置页直接显示
@@ -367,7 +415,8 @@ dsh-theme-miyabi/
 ├─ tools/
 │   ├─ build.mjs             # 零依赖构建：src + assets → client.js（含语法检查与体积报告）
 │   ├─ trace-emblem.mjs      # 位图 → 轮廓矢量化（解 PNG/走边界/简化/回栅格 IoU 自证）
-│   ├─ check.mjs             # 零依赖自检：142 项
+│   ├─ check.mjs             # 零依赖自检：143 项
+│   ├─ capture-shots.mjs     # README 示例图：无头 Edge + DevTools 协议（本机开发用，不进 CI）
 │   ├─ publish-preflight.mjs # 发布前检查（README 完整性、交付文件、待提交清单）
 │   └─ publish-github.mjs    # 一键发布到 GitHub（默认 dry-run，--apply 才动手）
 └─ .github/workflows/check.yml
@@ -378,8 +427,12 @@ dsh-theme-miyabi/
 ```bash
 node tools/build.mjs              # 改完 src/ 或 assets/ 后跑这一条
 node tools/check.mjs              # 提交前跑
+node tools/capture-shots.mjs      # 改动了外观时重出示例图（需要本机跑着 Harness）
 node tools/publish-preflight.mjs  # 发布前：README 完整性 / 交付文件 / 待提交清单
 ```
+
+`capture-shots.mjs` 的两个要点：用独立 user-data-dir（不碰你正在用的浏览器，
+localStorage 干净所以抓到的是出厂默认），主图裁掉左侧栏（那里是使用者的会话列表）。
 
 ### 发布到 GitHub（仅仓库维护者）
 
